@@ -107,6 +107,11 @@
         </p>
       </div>
 
+      <!-- User ID Display -->
+      <div class="p-2 text-center text-gray-400 text-xs">
+        User ID: <span id="user-id" class="font-mono">Loading...</span>
+      </div>
+
       <!-- Main Interface -->
       <div id="main-app" class="p-6 transition-all duration-300">
         <div class="flex flex-col items-center justify-center space-y-8">
@@ -134,6 +139,30 @@
             class="w-full bg-yellow-500 text-gray-900 py-3 rounded-full font-semibold chandi-button focus:outline-none"
           >
             Voice Activation
+          </button>
+        </div>
+      </div>
+
+      <!-- Safety Circle / Contacts Section -->
+      <div id="contacts-section" class="p-6 border-t border-gray-700 mt-4">
+        <h2 class="text-xl font-bold text-center mb-4">Your Safety Circle</h2>
+        <div id="contacts-list" class="space-y-2 mb-4 max-h-48 overflow-y-auto">
+          <p class="text-gray-400 text-sm text-center">
+            No contacts added yet.
+          </p>
+        </div>
+        <div class="flex space-x-2">
+          <input
+            type="tel"
+            id="contact-input"
+            placeholder="Emergency contact number"
+            class="flex-1 bg-gray-700 text-white rounded-full py-2 px-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          />
+          <button
+            id="add-contact-btn"
+            class="bg-blue-500 text-white py-2 px-4 rounded-full font-semibold chandi-button"
+          >
+            Add
           </button>
         </div>
       </div>
@@ -235,10 +264,48 @@
       preload="auto"
     ></audio>
 
-    <script>
+    <script type="module">
+      // Firebase global variables (will be provided by the environment)
+      const appId =
+        typeof __app_id !== "undefined" ? __app_id : "default-app-id";
+      const firebaseConfig =
+        typeof __firebase_config !== "undefined"
+          ? JSON.parse(__firebase_config)
+          : {};
+      const initialAuthToken =
+        typeof __initial_auth_token !== "undefined"
+          ? __initial_auth_token
+          : null;
+
+      // Firebase Imports
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+      import {
+        getAuth,
+        signInAnonymously,
+        signInWithCustomToken,
+        onAuthStateChanged,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        addDoc,
+        setDoc,
+        updateDoc,
+        deleteDoc,
+        onSnapshot,
+        collection,
+        query,
+        where,
+        getDocs,
+      } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+      import { setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app-check.js";
+      setLogLevel("debug"); // Enable Firestore logging
+
       // Global state
       let appActivated = false;
       let videoStream = null;
+      let db, auth, userId;
 
       // UI Elements
       const activateBtn = document.getElementById("activate-btn");
@@ -253,6 +320,10 @@
       const voiceActivationBtn = document.getElementById(
         "voice-activation-btn"
       );
+      const userIdDisplay = document.getElementById("user-id");
+      const contactInput = document.getElementById("contact-input");
+      const addContactBtn = document.getElementById("add-contact-btn");
+      const contactsList = document.getElementById("contacts-list");
 
       // Sounds
       const sirenSound = document.getElementById("siren-sound");
@@ -349,6 +420,59 @@
       }
 
       // Markdown to HTML conversion
+      const markdownDocs = {
+        about: `
+### **The Chandi App: Your Digital Guardian**
+
+The Chandi App is an innovative web-based safety solution designed to provide immediate protection and assistance for women and girls in emergency situations. The app is a prototype that demonstrates key features, including voice-activated commands, simulated sensor triggers, and an AI-powered safety chatbot named "Chiha."
+
+Our mission is to empower individuals with a tool that provides multiple layers of defense, from deterring attackers with loud alarms to discreetly sharing critical information with a trusted safety network.
+
+**How it Works:**
+The app is built around four specific safety situations, each with a unique and escalating response. It uses a combination of simulated hardware features and AI-driven communication to provide a comprehensive safety solution that is both proactive and reactive.
+
+**Disclaimer:**
+This app is a prototype and a proof of concept. It does not provide real-world, emergency services and should not be used in place of official emergency hotlines. In a real emergency, please contact your local police or emergency services immediately.
+`,
+        privacy_policy: `
+### **Privacy Policy**
+
+Your privacy and security are our top priorities. This policy outlines how your data is handled within The Chandi App prototype.
+
+* **Data Collection:** This prototype does not collect or store any personally identifiable information (PII) beyond what you voluntarily enter, such as emergency contact numbers. This data is stored securely in a dedicated Firebase Firestore database tied to your temporary user ID.
+* **Data Usage:** The emergency contact numbers you provide are used solely for the purpose of sending an emergency message with your location. They are not shared with any third parties or used for any other purpose.
+* **IP Rights:** All intellectual property rights related to The Chandi App prototype belong to the creator. You are granted a limited license for personal, non-commercial use only.
+* **Disclaimer:** As this is a prototype, we recommend against storing highly sensitive or personal information. The app's data is intended for demonstration purposes only.
+
+**Note:** For a full-fledged, production-ready application, we would implement more robust privacy and security measures, including end-to-end encryption.
+`,
+        terms_and_conditions: `
+### **Terms & Conditions and IP Rights**
+
+#### **1. Acceptance of Terms**
+By using The Chandi App prototype, you agree to these terms and conditions.
+
+#### **2. Intellectual Property Ownership**
+The entire intellectual property of The Chandi App prototype, including all source code, design elements, conceptual frameworks, and documentation, is and shall remain the exclusive property of the creator.
+
+#### **3. License Grant**
+The creator grants you a limited, non-exclusive, non-transferable license to use the Prototype solely for personal, non-commercial demonstration and evaluation. This license does not imply any right to sell, reproduce, distribute, or create derivative works.
+
+#### **4. Restrictions**
+You are expressly prohibited from:
+* Using the Prototype for any commercial purpose.
+* Distributing the Prototype.
+* Modifying, reverse-engineering, or decompiling the source code without written consent.
+* Claiming ownership of the Prototype or any of its intellectual property.
+
+#### **5. Disclaimer of Warranties**
+The Prototype is provided "as is" and without warranty of any kind. The creator makes no warranty that the Prototype will be error-free or function without interruption.
+
+#### **6. Limitation of Liability**
+The creator shall not be liable for any direct, indirect, incidental, special, or consequential damages arising from the use or inability to use the Prototype. You agree to use the Prototype at your own risk.
+`,
+      };
+
       function convertMarkdownToHtml(markdown) {
         let html = markdown
           .replace(/^### (.*$)/gim, "<h3>$1</h3>")
@@ -369,55 +493,185 @@
         html = html.replace(/<\/ul><p>/g, "</ul>");
         html = html.replace(/<\/h2><p>/g, "</h2>");
         html = html.replace(/<\/h3><p>/g, "</h3>");
+        html = html.replace(/<p><h3>/g, "<h3>").replace(/<\/h3><p>/g, "</h3>");
+        html = html.replace(/<p>## /g, "<h2>").replace(/<\/h2>/g, "</h2>");
 
         return html;
       }
 
-      async function showDocumentModal(docName) {
-        const filePath = `${docName}.md`;
-        try {
-          const response = await fetch(filePath);
-          const markdownText = await response.text();
-          const htmlContent = convertMarkdownToHtml(markdownText);
-          showModal(`
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold capitalize">${docName.replace(
-                          "_",
-                          " "
-                        )}</h2>
-                        <button onclick="hideModal()" class="text-gray-400 hover:text-white">&times;</button>
-                    </div>
-                    <div class="markdown-content max-h-96 overflow-y-auto">
-                        ${htmlContent}
-                    </div>
-                `);
-        } catch (error) {
+      function showDocumentModal(docName) {
+        const markdownText = markdownDocs[docName];
+        if (!markdownText) {
           showModal(`
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-xl font-bold">Error</h2>
                         <button onclick="hideModal()" class="text-gray-400 hover:text-white">&times;</button>
                     </div>
-                    <p class="text-red-400">Could not load the document. Please try again later.</p>
+                    <p class="text-red-400">Could not find the requested document.</p>
                 `);
+          return;
         }
+        const htmlContent = convertMarkdownToHtml(markdownText);
+        showModal(`
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold capitalize">${docName.replace(
+                      "_",
+                      " "
+                    )}</h2>
+                    <button onclick="hideModal()" class="text-gray-400 hover:text-white">&times;</button>
+                </div>
+                <div class="markdown-content max-h-96 overflow-y-auto">
+                    ${htmlContent}
+                </div>
+            `);
       }
 
       // Live location and video sharing (simulated)
-      function shareLiveLocationAndVideo() {
+      async function shareLiveLocationAndVideo() {
+        // Get contacts from Firestore
+        const contacts = await getContactsFromFirestore();
+
+        if (contacts.length === 0) {
+          chihaBot.addMessage(
+            "Chiha ✨",
+            "No contacts found. Please add emergency contacts to your Safety Circle first."
+          );
+          return;
+        }
+
         const liveLocationLink = `https://maps.google.com/?q=${30.334},${76.6214}`; // Sample live location (Sonipat, Haryana)
         const liveVideoLink = "https://example.com/live_video_stream"; // Placeholder live video stream
 
-        const message = `🚨 EMERGENCY! I need help. My live location is: ${liveLocationLink}. A live video of the situation is available here: ${liveVideoLink}. Please act fast!`;
-        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
-          message
-        )}`;
+        // Create a message for each contact
+        contacts.forEach((contact) => {
+          const message = `🚨 EMERGENCY! I need help. My live location is: ${liveLocationLink}. A live video of the situation is available here: ${liveVideoLink}. Please act fast!`;
+          const whatsappUrl = `https://wa.me/${
+            contact.number
+          }?text=${encodeURIComponent(message)}`;
+          window.open(whatsappUrl, "_blank");
+        });
 
         chihaBot.addMessage(
           "Chiha ✨",
-          `Emergency activated! I've prepared a message with your live location and video link. Please share it with your family and the local police.`
+          `Emergency activated! I've prepared a message for each of your contacts. Please share it with them.`
         );
+      }
 
-        window.open(whatsappUrl, "_blank");
+      // Firestore functions
+      async function initializeFirestore() {
+        try {
+          const app = initializeApp(firebaseConfig);
+          auth = getAuth(app);
+          db = getFirestore(app);
+
+          // Sign in the user
+          if (initialAuthToken) {
+            await signInWithCustomToken(auth, initialAuthToken);
+          } else {
+            await signInAnonymously(auth);
+          }
+
+          // Listen for auth state changes
+          onAuthStateChanged(auth, (user) => {
+            if (user) {
+              userId = user.uid;
+              userIdDisplay.textContent = userId;
+              startContactListener();
+            } else {
+              userIdDisplay.textContent = "Signed out";
+            }
+          });
+        } catch (error) {
+          console.error("Firebase initialization error:", error);
+        }
+      }
+
+      async function getContactsFromFirestore() {
+        const contacts = [];
+        if (!userId) {
+          console.error("User ID not available.");
+          return contacts;
+        }
+        const contactsRef = collection(
+          db,
+          `artifacts/${appId}/users/${userId}/contacts`
+        );
+        const querySnapshot = await getDocs(contactsRef);
+        querySnapshot.forEach((doc) => {
+          contacts.push(doc.data());
+        });
+        return contacts;
+      }
+
+      function startContactListener() {
+        const contactsRef = collection(
+          db,
+          `artifacts/${appId}/users/${userId}/contacts`
+        );
+        onSnapshot(
+          contactsRef,
+          (snapshot) => {
+            const contacts = [];
+            snapshot.forEach((doc) => {
+              contacts.push({ id: doc.id, ...doc.data() });
+            });
+            displayContacts(contacts);
+          },
+          (error) => {
+            console.error("Error listening to contacts:", error);
+          }
+        );
+      }
+
+      function displayContacts(contacts) {
+        contactsList.innerHTML = "";
+        if (contacts.length === 0) {
+          contactsList.innerHTML =
+            '<p class="text-gray-400 text-sm text-center">No contacts added yet.</p>';
+          return;
+        }
+        contacts.forEach((contact) => {
+          const contactDiv = document.createElement("div");
+          contactDiv.classList.add(
+            "flex",
+            "justify-between",
+            "items-center",
+            "bg-gray-700",
+            "p-2",
+            "rounded-lg"
+          );
+          contactDiv.innerHTML = `
+                    <span class="text-sm font-medium">${contact.number}</span>
+                    <button class="delete-contact-btn text-red-400 hover:text-red-500" data-id="${contact.id}">&times;</button>
+                `;
+          contactsList.appendChild(contactDiv);
+        });
+      }
+
+      async function addContact(number) {
+        if (!userId) {
+          console.error("User not authenticated.");
+          return;
+        }
+        if (!number) {
+          chihaBot.addMessage("Chiha ✨", "Please enter a valid phone number.");
+          return;
+        }
+        try {
+          const contactsRef = collection(
+            db,
+            `artifacts/${appId}/users/${userId}/contacts`
+          );
+          await addDoc(contactsRef, { number });
+          contactInput.value = "";
+          chihaBot.addMessage("Chiha ✨", "Contact added successfully.");
+        } catch (error) {
+          console.error("Error adding contact:", error);
+          chihaBot.addMessage(
+            "Chiha ✨",
+            "Failed to add contact. Please try again."
+          );
+        }
       }
 
       // Situation-specific logic
@@ -631,6 +885,34 @@
           sendChatBtn.click();
         }
       });
+
+      addContactBtn.addEventListener("click", () => {
+        const number = contactInput.value;
+        addContact(number);
+      });
+
+      contactsList.addEventListener("click", async (e) => {
+        if (e.target.classList.contains("delete-contact-btn")) {
+          const docId = e.target.dataset.id;
+          try {
+            if (userId) {
+              const contactRef = doc(
+                db,
+                `artifacts/${appId}/users/${userId}/contacts`,
+                docId
+              );
+              await deleteDoc(contactRef);
+              chihaBot.addMessage("Chiha ✨", "Contact deleted successfully.");
+            }
+          } catch (error) {
+            console.error("Error deleting contact:", error);
+            chihaBot.addMessage("Chiha ✨", "Failed to delete contact.");
+          }
+        }
+      });
+
+      // Initialize Firebase on page load
+      window.onload = initializeFirestore;
     </script>
   </body>
 </html>

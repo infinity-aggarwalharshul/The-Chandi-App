@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Chandi App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(135deg, #1f2937, #4b5563);
+        color: white;
+        min-height: 100vh;
+      }
+      .chandi-button {
+        transition: all 0.2s ease-in-out;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      }
+      .chandi-button:active {
+        transform: translateY(2px);
+        box-shadow: none;
+      }
+      .chiha-chat {
+        background-color: #374151;
+        border-top: 1px solid #4b5563;
+      }
+      /* Style for markdown content */
+      .markdown-content h1,
+      .markdown-content h2 {
+        font-weight: bold;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+      }
+      .markdown-content h1 {
+        font-size: 1.5rem;
+      }
+      .markdown-content h2 {
+        font-size: 1.25rem;
+      }
+      .markdown-content p {
+        margin-bottom: 0.5rem;
+      }
+      .markdown-content ul {
+        list-style-type: disc;
+        padding-left: 1.5rem;
+      }
+      .markdown-content li {
+        margin-bottom: 0.25rem;
+      }
+    </style>
+  </head>
+  <body class="flex flex-col items-center justify-center p-4">
+    <main
+      class="w-full max-w-lg mx-auto bg-gray-800 rounded-3xl shadow-xl overflow-hidden my-8"
+    >
+      <!-- Header with new SVG logo -->
+      <div class="p-6 text-center">
+        <svg
+          class="mx-auto h-20 w-20 text-pink-400"
+          viewBox="0 0 100 100"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- Goddess/Protector Eye -->
+          <circle
+            cx="50"
+            cy="50"
+            r="35"
+            stroke="currentColor"
+            stroke-width="4"
+            fill="none"
+          />
+          <path
+            d="M35 50 C 45 40, 55 40, 65 50"
+            stroke="currentColor"
+            stroke-width="3"
+          />
+          <circle cx="50" cy="50" r="5" fill="currentColor" />
+
+          <!-- Lightning Bolt inside the eye -->
+          <path d="M48 45 L45 52 L52 52 L49 59 Z" fill="currentColor" />
+
+          <!-- Name -->
+          <text
+            x="50"
+            y="95"
+            font-size="14"
+            text-anchor="middle"
+            fill="currentColor"
+            font-weight="bold"
+          >
+            CHANDI
+          </text>
+        </svg>
+        <h1 class="text-3xl font-bold tracking-tight text-pink-400 mt-2">
+          The Chandi App
+        </h1>
+        <p class="mt-2 text-sm text-gray-400">
+          Your guardian in challenging situations.
+        </p>
+      </div>
+
+      <!-- Main Interface -->
+      <div id="main-app" class="p-6 transition-all duration-300">
+        <div class="flex flex-col items-center justify-center space-y-8">
+          <!-- Power Button / Activation -->
+          <button
+            id="activate-btn"
+            class="w-48 h-48 bg-pink-500 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-105 shadow-2xl chandi-button focus:outline-none"
+          >
+            <span class="text-6xl font-bold text-white">ON</span>
+          </button>
+          <p
+            id="activation-prompt"
+            class="text-center text-gray-300 font-medium"
+          >
+            Press to activate safety mode.
+          </p>
+          <button
+            id="smartwatch-btn"
+            class="w-full bg-gray-700 text-white py-3 rounded-full font-semibold chandi-button focus:outline-none"
+          >
+            Connect Smart Device
+          </button>
+          <button
+            id="voice-activation-btn"
+            class="w-full bg-yellow-500 text-gray-900 py-3 rounded-full font-semibold chandi-button focus:outline-none"
+          >
+            Voice Activation
+          </button>
+        </div>
+      </div>
+
+      <!-- Links to documents -->
+      <div class="p-6 text-center border-t border-gray-700 mt-4">
+        <div class="flex justify-center space-x-4">
+          <button
+            data-doc="about"
+            class="text-xs text-gray-400 hover:text-white transition-colors"
+          >
+            About Us
+          </button>
+          <button
+            data-doc="privacy_policy"
+            class="text-xs text-gray-400 hover:text-white transition-colors"
+          >
+            Privacy Policy
+          </button>
+          <button
+            data-doc="terms_and_conditions"
+            class="text-xs text-gray-400 hover:text-white transition-colors"
+          >
+            Terms & Conditions
+          </button>
+        </div>
+      </div>
+
+      <!-- Chatbot Interface -->
+      <div class="chiha-chat p-4">
+        <div
+          id="chat-history"
+          class="h-48 overflow-y-auto mb-4 p-2 rounded-lg bg-gray-700 text-sm"
+        >
+          <div class="text-pink-400 font-semibold mb-1">Chiha✨:</div>
+          <div class="bg-gray-600 rounded-xl p-2 mb-2">
+            Hello, I'm Chiha. Here to help you.
+          </div>
+        </div>
+        <div class="flex items-center">
+          <input
+            type="text"
+            id="chat-input"
+            placeholder="Type your message..."
+            class="flex-1 bg-gray-700 text-white rounded-full py-2 px-4 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-pink-500"
+          />
+          <button
+            id="send-chat-btn"
+            class="ml-2 bg-pink-500 rounded-full w-10 h-10 flex items-center justify-center chandi-button focus:outline-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="2"
+              stroke="currentColor"
+              class="w-6 h-6 text-white transform -rotate-45"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modals -->
+    <div
+      id="modal-container"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4"
+      style="display: none"
+    >
+      <div class="modal-overlay absolute inset-0 bg-black opacity-80"></div>
+      <div
+        id="modal-content"
+        class="modal-content bg-gray-900 text-white p-6 rounded-2xl shadow-2xl z-10 w-full max-w-sm transform scale-95 transition-all duration-300"
+      >
+        <!-- Modal content goes here -->
+      </div>
+    </div>
+
+    <!-- Audio elements for sounds -->
+    <audio
+      id="siren-sound"
+      src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+      preload="auto"
+    ></audio>
+    <audio
+      id="alarm-sound"
+      src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+      preload="auto"
+    ></audio>
+    <audio
+      id="chandi-phrase-sound"
+      src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+      preload="auto"
+    ></audio>
+
+    <script>
+      // Global state
+      let appActivated = false;
+      let videoStream = null;
+
+      // UI Elements
+      const activateBtn = document.getElementById("activate-btn");
+      const activationPrompt = document.getElementById("activation-prompt");
+      const mainApp = document.getElementById("main-app");
+      const modalContainer = document.getElementById("modal-container");
+      const modalContent = document.getElementById("modal-content");
+      const chatHistory = document.getElementById("chat-history");
+      const chatInput = document.getElementById("chat-input");
+      const sendChatBtn = document.getElementById("send-chat-btn");
+      const smartwatchBtn = document.getElementById("smartwatch-btn");
+      const voiceActivationBtn = document.getElementById(
+        "voice-activation-btn"
+      );
+
+      // Sounds
+      const sirenSound = document.getElementById("siren-sound");
+      const alarmSound = document.getElementById("alarm-sound");
+      const chandiPhraseSound = document.getElementById("chandi-phrase-sound");
+
+      // Gemini API Configuration
+      const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`;
+      const systemPrompt =
+        "You are a safety assistant named Chiha. Your primary goal is to remain calm, reassuring, and helpful in emergency situations. Provide concise, direct advice and emotional support. Avoid casual conversation. If the user seems to be in an emergency, gently remind them to use the app's safety features (Situation 1, 2, 3, or 4). Your responses should be short and focused on safety.";
+
+      // Chatbot UI handler
+      const chihaBot = {
+        addMessage: function (sender, text) {
+          const messageDiv = document.createElement("div");
+          messageDiv.classList.add("bg-gray-600", "rounded-xl", "p-2", "mb-2");
+          messageDiv.textContent = text;
+          const senderDiv = document.createElement("div");
+          senderDiv.classList.add(
+            "text-sm",
+            "font-semibold",
+            sender.includes("Chiha") ? "text-pink-400" : "text-cyan-400"
+          );
+          senderDiv.textContent = sender + ":";
+          chatHistory.appendChild(senderDiv);
+          chatHistory.appendChild(messageDiv);
+          chatHistory.scrollTop = chatHistory.scrollHeight;
+        },
+      };
+
+      // Function to call the Gemini API
+      async function generateChihaResponse(userQuery) {
+        chihaBot.addMessage("Chiha ✨", "..."); // Show loading state
+        try {
+          const payload = {
+            contents: [{ parts: [{ text: userQuery }] }],
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+          };
+          const response = await fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const result = await response.json();
+          const chihaResponse =
+            result.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (chihaResponse) {
+            // Replace loading state with the actual response
+            const lastChihaMessage = chatHistory.querySelector(
+              ".text-pink-400:last-of-type + .bg-gray-600"
+            );
+            if (lastChihaMessage) {
+              lastChihaMessage.textContent = chihaResponse;
+            } else {
+              chihaBot.addMessage("Chiha ✨", chihaResponse);
+            }
+          } else {
+            chihaBot.addMessage(
+              "Chiha ✨",
+              "I am unable to respond right now. Please use the app's safety features."
+            );
+          }
+        } catch (error) {
+          console.error("Error calling Gemini API:", error);
+          const lastChihaMessage = chatHistory.querySelector(
+            ".text-pink-400:last-of-type + .bg-gray-600"
+          );
+          if (lastChihaMessage) {
+            lastChihaMessage.textContent =
+              "I am unable to respond right now. Please use the app's safety features.";
+          } else {
+            chihaBot.addMessage(
+              "Chiha ✨",
+              "I am unable to respond right now. Please use the app's safety features."
+            );
+          }
+        }
+      }
+
+      // Modal functions
+      function showModal(contentHtml) {
+        modalContent.innerHTML = contentHtml;
+        modalContainer.style.display = "flex";
+        setTimeout(() => {
+          modalContent.style.transform = "scale(1)";
+        }, 10);
+      }
+
+      function hideModal() {
+        modalContent.style.transform = "scale(0.95)";
+        setTimeout(() => {
+          modalContainer.style.display = "none";
+        }, 300);
+      }
+
+      // Markdown to HTML conversion
+      function convertMarkdownToHtml(markdown) {
+        let html = markdown
+          .replace(/^### (.*$)/gim, "<h3>$1</h3>")
+          .replace(/^## (.*$)/gim, "<h2>$1</h2>")
+          .replace(/^# (.*$)/gim, "<h1>$1</h1>")
+          .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
+          .replace(/\*(.*?)\*/gim, "<em>$1</em>")
+          .replace(/^\* (.*$)/gim, "<li>$1</li>")
+          .replace(/^(.*$)/gim, "<p>$1</p>");
+
+        // Wrap list items in <ul>
+        html = html
+          .replace(/<p><li>/g, "<ul><li>")
+          .replace(/<\/li><\/p>/g, "</li></ul>");
+
+        // Cleanup empty p tags and other issues
+        html = html.replace(/<p><\/p>/g, "");
+        html = html.replace(/<\/ul><p>/g, "</ul>");
+        html = html.replace(/<\/h2><p>/g, "</h2>");
+        html = html.replace(/<\/h3><p>/g, "</h3>");
+
+        return html;
+      }
+
+      async function showDocumentModal(docName) {
+        const filePath = `${docName}.md`;
+        try {
+          const response = await fetch(filePath);
+          const markdownText = await response.text();
+          const htmlContent = convertMarkdownToHtml(markdownText);
+          showModal(`
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold capitalize">${docName.replace(
+                          "_",
+                          " "
+                        )}</h2>
+                        <button onclick="hideModal()" class="text-gray-400 hover:text-white">&times;</button>
+                    </div>
+                    <div class="markdown-content max-h-96 overflow-y-auto">
+                        ${htmlContent}
+                    </div>
+                `);
+        } catch (error) {
+          showModal(`
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-xl font-bold">Error</h2>
+                        <button onclick="hideModal()" class="text-gray-400 hover:text-white">&times;</button>
+                    </div>
+                    <p class="text-red-400">Could not load the document. Please try again later.</p>
+                `);
+        }
+      }
+
+      // Live location and video sharing (simulated)
+      function shareLiveLocationAndVideo() {
+        const liveLocationLink = `https://maps.google.com/?q=${30.334},${76.6214}`; // Sample live location (Sonipat, Haryana)
+        const liveVideoLink = "https://example.com/live_video_stream"; // Placeholder live video stream
+
+        const message = `🚨 EMERGENCY! I need help. My live location is: ${liveLocationLink}. A live video of the situation is available here: ${liveVideoLink}. Please act fast!`;
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(
+          message
+        )}`;
+
+        chihaBot.addMessage(
+          "Chiha ✨",
+          `Emergency activated! I've prepared a message with your live location and video link. Please share it with your family and the local police.`
+        );
+
+        window.open(whatsappUrl, "_blank");
+      }
+
+      // Situation-specific logic
+      function triggerSituationOne() {
+        hideModal();
+        // Play loud alarm and voice phrase
+        alarmSound.play();
+        chandiPhraseSound.play();
+        chihaBot.addMessage(
+          "Chiha ✨",
+          "Situation 1 activated: Loud alarm and safety phrase are now playing!"
+        );
+      }
+
+      function triggerSituationTwo() {
+        hideModal();
+        // Play a virtual loud sound (simulated by a loud sound)
+        const virtualSoundEffect = `
+                <div class="text-center mt-4">
+                    <div class="animate-pulse text-xl text-red-500 font-bold">VIRTUAL ALARM ACTIVATED</div>
+                    <div class="text-white text-lg mt-2">"Jai Maa Chandi Devi"</div>
+                </div>
+            `;
+        mainApp.innerHTML = virtualSoundEffect + mainApp.innerHTML;
+        alarmSound.play();
+        chandiPhraseSound.play();
+        chihaBot.addMessage(
+          "Chiha ✨",
+          "Situation 2 activated: Virtual sound alarm is playing!"
+        );
+      }
+
+      function triggerSituationThree() {
+        hideModal();
+        // Play police siren sound
+        sirenSound.play();
+        chihaBot.addMessage(
+          "Chiha ✨",
+          "Situation 3 activated: Police siren is now playing!"
+        );
+      }
+
+      function triggerSituationFour() {
+        hideModal();
+        chihaBot.addMessage(
+          "Chiha ✨",
+          "Situation 4 activated: Your movement has triggered the alarm!"
+        );
+      }
+
+      function showSmartwatchModal() {
+        showModal(`
+                <h2 class="text-center text-xl font-bold">Connect Smart Device</h2>
+                <p class="mt-4 text-center text-gray-400">
+                    A real app would use Bluetooth to detect heart rate changes and automatically trigger the alarm. For this demo, you can activate it manually.
+                </p>
+                <div class="mt-6 space-y-4">
+                    <button id="trigger-heartbeat-alarm-btn" class="w-full bg-red-500 text-white py-3 rounded-xl font-semibold chandi-button">Activate Police Siren</button>
+                    <button onclick="hideModal()" class="w-full bg-gray-600 text-white py-3 rounded-xl font-semibold chandi-button">Cancel</button>
+                </div>
+            `);
+        document
+          .getElementById("trigger-heartbeat-alarm-btn")
+          .addEventListener("click", triggerSituationThree);
+      }
+
+      // NLP Voice Activation logic
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false; // Listen for a single phrase
+      recognition.lang = "en-IN"; // Set language to Indian English
+
+      recognition.onstart = () => {
+        chihaBot.addMessage("Chiha ✨", "Listening for your command...");
+        voiceActivationBtn.textContent = "Listening...";
+        voiceActivationBtn.disabled = true;
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase();
+        chihaBot.addMessage("You (Voice)", transcript);
+
+        if (transcript.includes("jai maa chandi devi")) {
+          chihaBot.addMessage(
+            "Chiha ✨",
+            "Voice command recognized. Activating Situation 1."
+          );
+          triggerSituationOne();
+        } else if (transcript.includes("help")) {
+          chihaBot.addMessage(
+            "Chiha ✨",
+            "Voice command recognized. Activating Situation 4."
+          );
+          triggerSituationFour();
+        } else {
+          chihaBot.addMessage("Chiha ✨", "Could not recognize command.");
+        }
+      };
+
+      recognition.onend = () => {
+        voiceActivationBtn.textContent = "Voice Activation";
+        voiceActivationBtn.disabled = false;
+      };
+
+      recognition.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        chihaBot.addMessage(
+          "Chiha ✨",
+          "An error occurred with voice recognition."
+        );
+        voiceActivationBtn.textContent = "Voice Activation";
+        voiceActivationBtn.disabled = false;
+      };
+
+      // Event listeners
+      activateBtn.addEventListener("click", () => {
+        if (!appActivated) {
+          // Simulate "power button" activation
+          showModal(`
+                    <h2 class="text-center text-xl font-bold">App Activated</h2>
+                    <p class="mt-4 text-center text-gray-400">
+                        The app has been activated via your simulated fingerprint scan.
+                    </p>
+                    <div class="mt-6 space-y-4">
+                        <button id="auth-btn" class="w-full bg-green-500 text-white py-3 rounded-xl font-semibold chandi-button">Authenticate</button>
+                    </div>
+                `);
+
+          document.getElementById("auth-btn").addEventListener("click", () => {
+            appActivated = true;
+            hideModal();
+            activationPrompt.textContent =
+              "Safety mode active. Choose your situation.";
+            activateBtn.classList.add("bg-red-500", "hover:bg-red-600");
+            activateBtn.innerHTML = `<span class="text-4xl">🚨</span>`;
+            smartwatchBtn.style.display = "none";
+            voiceActivationBtn.style.display = "none";
+
+            // Start live video stream (simulated)
+            // The camera access permission would be requested here
+            navigator.mediaDevices
+              .getUserMedia({ video: true, audio: true })
+              .then((stream) => {
+                videoStream = stream;
+                chihaBot.addMessage(
+                  "Chiha ✨",
+                  "Live video stream and location data are ready to be shared."
+                );
+                shareLiveLocationAndVideo();
+              })
+              .catch((err) => {
+                chihaBot.addMessage(
+                  "Chiha ✨",
+                  "Could not access camera/microphone. Live video sharing is unavailable."
+                );
+                shareLiveLocationAndVideo();
+              });
+
+            // Update UI to show situation options
+            mainApp.innerHTML = `
+                        <div class="grid grid-cols-2 gap-4">
+                            <button id="sit-1-btn" class="bg-blue-500 text-white py-6 rounded-xl text-lg font-semibold chandi-button">Situation 1:<br>Loud Alarm</button>
+                            <button id="sit-2-btn" class="bg-indigo-500 text-white py-6 rounded-xl text-lg font-semibold chandi-button">Situation 2:<br>Virtual Sound</button>
+                            <button id="sit-3-btn" class="bg-purple-500 text-white py-6 rounded-xl text-lg font-semibold chandi-button">Situation 3:<br>Police Siren</button>
+                            <button id="sit-4-btn" class="bg-teal-500 text-white py-6 rounded-xl text-lg font-semibold chandi-button">Situation 4:<br>Running</button>
+                        </div>
+                    `;
+
+            document
+              .getElementById("sit-1-btn")
+              .addEventListener("click", triggerSituationOne);
+            document
+              .getElementById("sit-2-btn")
+              .addEventListener("click", triggerSituationTwo);
+            document
+              .getElementById("sit-3-btn")
+              .addEventListener("click", triggerSituationThree);
+            document
+              .getElementById("sit-4-btn")
+              .addEventListener("click", triggerSituationFour);
+          });
+        }
+      });
+
+      smartwatchBtn.addEventListener("click", showSmartwatchModal);
+
+      voiceActivationBtn.addEventListener("click", () => {
+        recognition.start();
+      });
+
+      // Add event listeners for the document buttons
+      document.querySelectorAll("button[data-doc]").forEach((button) => {
+        button.addEventListener("click", (event) => {
+          const docName = event.target.dataset.doc;
+          showDocumentModal(docName);
+        });
+      });
+
+      // Chatbot functionality
+      sendChatBtn.addEventListener("click", () => {
+        const message = chatInput.value;
+        if (message.trim() !== "") {
+          chihaBot.addMessage("You", message);
+          generateChihaResponse(message);
+          chatInput.value = "";
+        }
+      });
+      chatInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          sendChatBtn.click();
+        }
+      });
+    </script>
+  </body>
+</html>

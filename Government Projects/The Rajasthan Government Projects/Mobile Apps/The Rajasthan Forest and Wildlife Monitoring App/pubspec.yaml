@@ -41,6 +41,12 @@ dependencies:
   encrypt: ^5.0.3
   image_picker: ^1.2.1
   intl: ^0.20.2
+  record: ^6.1.2
+  audioplayers: ^6.5.1
+  sqflite: ^2.4.2
+  path_provider: ^2.1.5
+  flutter_secure_storage: ^10.0.0
+  path: ^1.9.1
 
 dev_dependencies:
   flutter_test:

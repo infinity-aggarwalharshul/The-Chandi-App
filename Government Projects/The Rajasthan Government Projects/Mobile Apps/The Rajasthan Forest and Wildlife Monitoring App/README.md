@@ -12,9 +12,11 @@
 
 ## 🚀 Key Features
 
-### 1. 🛡️ Vajra-Kavach™ Encryption (Patent Pending)
+### 1. 🛡️ Vajra-Kavach™ 2.0 (Advanced Encryption)
 
-- **Deep-Tech Security:** All offense logs, voice notes, and images are encrypted using **AES-256-GCM** algorithms _before_ they are stored locally or uploaded.
+- **Deep-Tech Security:** Defense-Grade **AES-256-GCM** encryption for:
+  - **Text Notes:** Offense logs and confidential reports.
+  - **Binary Evidence:** Images and Voice Notes are encrypted at byte-level before disk writes.
 - **Tamper-Proof:** Ensures chain of custody for legal evidence in poaching cases.
 - **Compliance:** Adheres to **IT Act, 2000** and **Evidence Act** digital admissibility standards.
 
@@ -23,12 +25,17 @@
 - **Offline Recognition:** Powered by **TensorFlow Lite**, identifying flora and fauna (e.g., Khejri trees, Blackbucks) instantly without internet.
 - **Wildlife Protection Act Integration:** Automatically cites relevant sections (e.g., _Schedule I, WPA 1972_) upon detection.
 
-### 3. 🌐 Megh-Setu (Hybrid Networking)
+### 3. 🌐 Megh-Setu (Hybrid Networking) with Laghu-Bhandar Pro
 
-- **Offline First:** "Laghu-Bhandar" technology stores data in compressed local shards when out of network coverage (Deep Forest Zones).
+- **Offline First (SQLite):** Uses **SQLite** ("Laghu-Bhandar") to store encrypted shards locally when out of coverage.
 - **Auto-Sync:** Seamlessly uploads encrypted payloads to the "10T SQL Grid" once connectivity (5G/SatCom) is restored.
 
-### 4. 📜 Parivesh Integration
+### 4. 📸 Multimedia Evidence
+
+- **Integrated Voice Recorder:** Capture suspect statements/ambient noise directly into the app.
+- **Secure Cam:** Capture geo-tagged images of evidence (poached items, footprints) which are immediately encrypted.
+
+### 5. 📜 Parivesh Integration
 
 - **NoC Tracker:** Real-time tracking of Non-Objection Certificates for developmental projects (Solar Parks, Roads) directly from the MoEFCC Parivesh portal APIs.
 

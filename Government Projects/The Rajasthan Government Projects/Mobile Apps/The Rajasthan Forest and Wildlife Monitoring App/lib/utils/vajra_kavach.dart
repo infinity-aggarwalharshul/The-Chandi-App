@@ -49,8 +49,36 @@ class VajraKavach {
     }
   }
 
-  /// Simulation of Media Encryption (since handling large binary blobs in this mock is heavy)
-  static String encryptMediaReference(String mediaType) {
-    return "VAJRA_ENC_BLOB_${mediaType.toUpperCase()}_${DateTime.now().millisecondsSinceEpoch}";
+  /// Encrypts binary data (e.g., Image/Audio bytes)
+  static Future<Uint8List> encryptBinary(Uint8List data) async {
+    if (_key == null) await init();
+    
+    final iv = IV.fromSecureRandom(_ivLength);
+    final encrypter = Encrypter(AES(_key!, mode: AESMode.gcm));
+    
+    final encrypted = encrypter.encryptBytes(data, iv: iv);
+    
+    // Prepend IV to the encrypted data for storage
+    // Format: [IV bytes] + [Encrypted bytes]
+    return Uint8List.fromList([...iv.bytes, ...encrypted.bytes]);
   }
-}
+
+  /// Decrypts binary data
+  static Future<Uint8List> decryptBinary(Uint8List secureData) async {
+    if (_key == null) await init();
+
+    try {
+      // Extract IV (first 12 bytes)
+      final ivBytes = secureData.sublist(0, _ivLength);
+      final encryptedBytes = secureData.sublist(_ivLength);
+      
+      final iv = IV(ivBytes);
+      final encrypted = Encrypted(encryptedBytes);
+      
+      final encrypter = Encrypter(AES(_key!, mode: AESMode.gcm));
+      return Uint8List.fromList(encrypter.decryptBytes(encrypted, iv: iv));
+    } catch (e) {
+      print("Binary Decryption Error: $e");
+      throw Exception("Data Compromised");
+    }
+  }

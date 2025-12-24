@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:record/record.dart';
+import 'package:path_provider/path_provider.dart';
 import '../utils/app_state.dart';
 
 class OffenseModal extends StatefulWidget {
@@ -11,10 +15,47 @@ class OffenseModal extends StatefulWidget {
 
 class _OffenseModalState extends State<OffenseModal> {
   final TextEditingController _notesController = TextEditingController();
+  final AudioRecorder _audioRecorder = AudioRecorder();
+  
   String _offenseType = "wood_cutting";
   bool _isRecording = false;
-  bool _hasVoice = false;
-  bool _hasImage = false;
+  
+  File? _imageFile;
+  String? _audioPath;
+
+  @override
+  void dispose() {
+    _audioRecorder.dispose();
+    super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera, imageQuality: 50);
+    if (image != null) {
+      setState(() => _imageFile = File(image.path));
+    }
+  }
+
+  Future<void> _toggleRecording() async {
+    if (_isRecording) {
+      // Stop
+      final path = await _audioRecorder.stop();
+      setState(() {
+        _isRecording = false;
+        _audioPath = path;
+      });
+    } else {
+      // Start
+      if (await _audioRecorder.hasPermission()) {
+        final dir = await getApplicationDocumentsDirectory();
+        final path = '${dir.path}/temp_audio_${DateTime.now().millisecondsSinceEpoch}.m4a';
+        
+        await _audioRecorder.start(const RecordConfig(), path: path);
+        setState(() => _isRecording = true);
+      }
+    }
+  }
 
   void _submit() async {
     if (_notesController.text.isEmpty) {
@@ -24,18 +65,16 @@ class _OffenseModalState extends State<OffenseModal> {
 
     Navigator.pop(context); // Close modal first
     
-    // Simulate Encryption Delay
+    // Simulate Encryption UI Delay for effect
     await Future.delayed(Duration(seconds: 1));
 
     // Add to State
-    Provider.of<AppState>(context, listen: false).addLog({
+    await Provider.of<AppState>(context, listen: false).addLog({
       "id": "GOV-RJ-${DateTime.now().millisecondsSinceEpoch}",
       "type": _offenseType,
-      "notes": _notesController.text, // This will get encrypted in Provider
-      "has_voice": _hasVoice,
-      "has_image": _hasImage,
+      "notes": _notesController.text, 
       "timestamp": DateTime.now().toIso8601String(),
-    });
+    }, imageFile: _imageFile, audioPath: _audioPath);
 
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Encrypted Data Uploaded via Vajra-Kavach."),
@@ -113,45 +152,53 @@ class _OffenseModalState extends State<OffenseModal> {
                       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                     ),
                   ),
+                  
                   SizedBox(height: 16),
 
                   Row(
                     children: [
+                      // Image Picker
                       Expanded(
                         child: InkWell(
-                          onTap: () => setState(() => _hasImage = true),
+                          onTap: _pickImage,
                           child: Container(
                             height: 100,
                             decoration: BoxDecoration(color: Colors.grey.shade50, borderRadius: BorderRadius.circular(12), border: Border.all(color: Colors.grey.shade200)),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(_hasImage ? FontAwesomeIcons.check : FontAwesomeIcons.camera, color: _hasImage ? Colors.green : Colors.grey.shade300),
-                                SizedBox(height: 4),
-                                Text(_hasImage ? "Captured" : "Evidence", style: TextStyle(fontSize: 10, color: Colors.grey)),
-                              ],
-                            ),
+                            child: _imageFile != null 
+                              ? ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.file(_imageFile!, fit: BoxFit.cover))
+                              : Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(FontAwesomeIcons.camera, color: Colors.grey.shade300),
+                                  SizedBox(height: 4),
+                                  Text("Capture Photo", style: TextStyle(fontSize: 10, color: Colors.grey)),
+                                ],
+                              ),
                           ),
                         ),
                       ),
+                      
                       SizedBox(width: 12),
-                       Expanded(
+                      
+                      // Audio Recorder
+                      Expanded(
                         child: InkWell(
-                          onTap: () => setState(() {
-                            _isRecording = !_isRecording;
-                            if (!_isRecording) _hasVoice = true;
-                          }),
+                          onTap: _toggleRecording,
                           child: Container(
                             height: 100,
-                            decoration: BoxDecoration(color: _isRecording ? Colors.red.shade50 : Colors.grey.shade50, borderRadius: BorderRadius.circular(12), border: Border.all(color: _isRecording ? Colors.red.shade200 : Colors.grey.shade200)),
+                            decoration: BoxDecoration(
+                                color: _isRecording ? Colors.red.shade50 : Colors.grey.shade50, 
+                                borderRadius: BorderRadius.circular(12), 
+                                border: Border.all(color: _isRecording ? Colors.red.shade200 : Colors.grey.shade200)
+                            ),
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 _isRecording 
                                   ? Icon(FontAwesomeIcons.microphone, color: Colors.red).animate(onPlay: (c) => c.repeat()).fade() 
-                                  : Icon(_hasVoice ? FontAwesomeIcons.check : FontAwesomeIcons.microphone, color: _hasVoice ? Colors.green : Colors.grey.shade300),
+                                  : Icon(_audioPath != null ? FontAwesomeIcons.check : FontAwesomeIcons.microphone, color: _audioPath != null ? Colors.green : Colors.grey.shade300),
                                 SizedBox(height: 4),
-                                Text(_isRecording ? "Recording..." : (_hasVoice ? "Recorded" : "Voice Note"), style: TextStyle(fontSize: 10, color: _isRecording ? Colors.red : Colors.grey)),
+                                Text(_isRecording ? "Recording..." : (_audioPath != null ? "Voice Recorded" : "Voice Note"), style: TextStyle(fontSize: 10, color: _isRecording ? Colors.red : Colors.grey)),
                               ],
                             ),
                           ),

@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'vajra_kavach.dart';
-import 'dart:async';
+import 'db_helper.dart';
 
 enum UserRole {
   guard,
@@ -13,6 +15,7 @@ class AppState extends ChangeNotifier {
   bool _isOnline = true;
   List<Map<String, dynamic>> _logs = [];
   bool _isSyncing = false;
+  final DbHelper _dbHelper = DbHelper();
 
   UserRole get currentUser => _currentUser;
   bool get isOnline => _isOnline;
@@ -40,6 +43,16 @@ class AppState extends ChangeNotifier {
 
   List<Map<String, dynamic>> get dfoIncidents => _dfoIncidents;
 
+  AppState() {
+    _loadLogs();
+  }
+
+  Future<void> _loadLogs() async {
+    final data = await _dbHelper.queryAllLogs();
+    _logs = data.map((e) => Map<String, dynamic>.from(e)).toList();
+    notifyListeners();
+  }
+
   void login(UserRole role) {
     _currentUser = role;
     notifyListeners();
@@ -55,17 +68,54 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addLog(Map<String, dynamic> logData) async {
-    // Encrypt content before adding
-    logData['data'] = await VajraKavach.encryptData(logData['notes'] ?? "");
-    logData['synced'] = _isOnline; // Auto-sync if online
+  Future<void> addLog(Map<String, dynamic> logData, {File? imageFile, String? audioPath}) async {
+    // 1. Encrypt Text
+    final encryptedNotes = await VajraKavach.encryptData(logData['notes'] ?? "");
     
-    // Decrypt immediately for local display purpose (in real app, we'd decrypt only when viewing details)
-    // But for the list view logs, we might just show metadata.
-    // We'll keep the raw 'notes' for display in this session, but 'data' represents the stored value.
+    // 2. Encrypt & Save Files
+    String? encImagePath;
+    String? encAudioPath;
     
-    _logs.insert(0, logData);
-    notifyListeners();
+    if (imageFile != null) {
+      final bytes = await imageFile.readAsBytes();
+      final encBytes = await VajraKavach.encryptBinary(bytes);
+      final dir = await getApplicationDocumentsDirectory();
+      final path = "${dir.path}/ENC_IMG_${DateTime.now().millisecondsSinceEpoch}.bin";
+      await File(path).writeAsBytes(encBytes);
+      encImagePath = path;
+    }
+
+    if (audioPath != null) {
+      final file = File(audioPath);
+      if (await file.exists()) {
+        final bytes = await file.readAsBytes();
+        final encBytes = await VajraKavach.encryptBinary(bytes);
+        final dir = await getApplicationDocumentsDirectory();
+        final path = "${dir.path}/ENC_AUD_${DateTime.now().millisecondsSinceEpoch}.bin";
+        await File(path).writeAsBytes(encBytes);
+        encAudioPath = path;
+      }
+    }
+
+    // 3. Insert into DB
+    final row = {
+      "id": logData['id'],
+      "type": logData['type'],
+      "encrypted_notes": encryptedNotes,
+      "has_voice": (audioPath != null) ? 1 : 0,
+      "has_image": (imageFile != null) ? 1 : 0,
+      "timestamp": logData['timestamp'],
+      "synced": _isOnline ? 1 : 0,
+      "encrypted_image_path": encImagePath,
+      "encrypted_audio_path": encAudioPath
+    };
+
+    await _dbHelper.insertLog(row);
+    
+    // 4. Refresh UI (Simulate 'Decrypted' View for the logger)
+    // In a real app, we would decrypt on the fly. Here we just reload the DB list 
+    // and rely on existing metadata for the list item.
+    await _loadLogs();
   }
 
   Future<void> syncData() async {
@@ -75,16 +125,23 @@ class AppState extends ChangeNotifier {
 
     await Future.delayed(Duration(seconds: 2));
 
-    for (var log in _logs) {
-      log['synced'] = true;
+    // Update all local rows to synced
+    final allLogs = await _dbHelper.queryAllLogs();
+    for (var log in allLogs) {
+      if (log['synced'] == 0) {
+        final newRow = Map<String, dynamic>.from(log);
+        newRow['synced'] = 1;
+        await _dbHelper.update(newRow);
+      }
     }
 
+    await _loadLogs();
     _isSyncing = false;
     notifyListeners();
   }
 
   double get localStorageUsage {
-    // Mock calculation
-    return _logs.length * 256.0; // 256 bytes per log
+    // Basic estimation
+    return _logs.length * 256.0; 
   }
 }

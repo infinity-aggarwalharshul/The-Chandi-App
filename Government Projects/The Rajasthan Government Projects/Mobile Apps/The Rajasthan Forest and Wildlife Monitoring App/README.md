@@ -41,6 +41,15 @@
 
 ---
 
+## 🏛️ Government Documentation & Reports
+
+Official documentation for the **Government of Rajasthan** and **Ministry of Environment, Forest and Climate Change (MoEFCC)** can be found in the `Government_Documents/` directory:
+
+- [📄 Detailed Project Report (DPR)](Government_Documents/Detailed_Project_Report.md)
+- [📄 Project Proposal for PCCF (HoFF)](Government_Documents/Project_Proposal_Rajasthan_Govt.md)
+
+---
+
 ## 🛠️ Technical Architecture
 
 - **Framework:** Flutter (Dart 3.0+)

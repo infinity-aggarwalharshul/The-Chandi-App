@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>The ChitraHarsha Van Rakshak | Ultimate Commercial Edition</title>
+    <meta
+      name="description"
+      content="World's most advanced Forest Monitoring System with Hybrid AI and Edge Encryption."
+    />
+
+    <!-- PWA Manifest Simulation -->
+    <link
+      rel="manifest"
+      href="data:application/json;base64,ewogICJuYW1lIjogIlRoZSBDaGl0cmFIYXJzaGEgVmFuIFJha3NoYWsiLAogICJzaG9ydF9uYW1lIjogIlZhbiBSYWtzaGFrIiwKICAic3RhcnRfdXJsIjogIi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMxYTRkMmUiLAogICJ0aGVtZV9jb2xvciIjogIiMxYTRkMmUiCn0="
+    />
+
+    <!-- Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+    <style>
+      /* THEME: The ChitraHarsha VPK Ventures Corporate Identity */
+      :root {
+        --brand-primary: #0f3d23; /* Deep Jungle Green */
+        --brand-accent: #ffd700; /* Vedic Gold */
+        --brand-tech: #00f0ff; /* Cyber Cyan for AI Elements */
+        --glass-bg: rgba(255, 255, 255, 0.85);
+        --glass-border: rgba(255, 255, 255, 0.4);
+      }
+
+      body {
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+        background-color: #f4f6f8;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      /* Glassmorphism Classes */
+      .glass-panel {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+      }
+
+      .dark-glass {
+        background: rgba(15, 23, 42, 0.9);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+
+      /* Animations */
+      @keyframes scan-line {
+        0% {
+          top: 0%;
+          opacity: 0;
+        }
+        10% {
+          opacity: 1;
+          box-shadow: 0 0 15px var(--brand-tech);
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          top: 100%;
+          opacity: 0;
+        }
+      }
+
+      @keyframes hologram {
+        0% {
+          opacity: 0.8;
+        }
+        50% {
+          opacity: 1;
+          text-shadow: 0 0 10px var(--brand-tech);
+        }
+        100% {
+          opacity: 0.8;
+        }
+      }
+
+      .animate-hologram {
+        animation: hologram 2s infinite;
+      }
+      .animate-scan {
+        animation: scan-line 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+
+      /* Secure Badge */
+      .secure-badge {
+        background: linear-gradient(135deg, #ffd700, #b8860b);
+        color: #000;
+        font-weight: 800;
+        clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body
+    class="h-screen flex flex-col overflow-hidden text-slate-800 select-none"
+  >
+    <!-- TOP: MEGH-SETU (Cloud Bridge) STATUS -->
+    <div
+      id="cloud-status"
+      class="w-full text-[10px] font-bold py-1 bg-slate-900 text-white flex justify-between items-center px-4 shadow-xl z-50"
+    >
+      <div class="flex items-center gap-2">
+        <span
+          class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"
+          id="status-dot"
+        ></span>
+        <span id="status-text">MEGH-SETU: CONNECTED (5G)</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-cyan-400"
+          ><i class="fas fa-database"></i> 10T SQL GRID</span
+        >
+        <span class="text-yellow-400"
+          ><i class="fas fa-shield-alt"></i> VAJRA-ENCRYPTED</span
+        >
+      </div>
+    </div>
+
+    <!-- APP CONTAINER -->
+    <div
+      id="app-root"
+      class="flex-1 flex flex-col relative overflow-hidden bg-[url('https://images.unsplash.com/photo-1448375240586-dfd8d395ea6c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center"
+    >
+      <!-- INTRO / LOGIN (Biometric Simulation) -->
+      <div
+        id="login-screen"
+        class="absolute inset-0 z-[100] bg-slate-900/90 backdrop-blur-sm flex items-center justify-center"
+      >
+        <div
+          class="glass-panel p-8 rounded-3xl max-w-sm w-full mx-4 text-center border-t-4 border-yellow-500 relative overflow-hidden"
+        >
+          <!-- Decorative BG Elements -->
+          <div
+            class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent to-black/10 pointer-events-none"
+          ></div>
+
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/1200px-Emblem_of_India.svg.png"
+            class="w-16 h-16 mx-auto mb-4 drop-shadow-lg"
+          />
+
+          <h1 class="text-2xl font-black text-slate-800 tracking-tight">
+            The ChitraHarsha
+          </h1>
+          <h2 class="text-xl font-bold text-emerald-700 mb-1">Van Rakshak ™</h2>
+          <div class="text-[9px] text-gray-500 uppercase tracking-[0.2em] mb-8">
+            Powered by VPK Ventures • Patent Pending
+          </div>
+
+          <div class="space-y-3 relative z-10">
+            <button
+              onclick="app.biometricLogin('guard')"
+              class="w-full bg-white hover:bg-emerald-50 border border-gray-200 p-4 rounded-xl flex items-center gap-4 transition-all hover:shadow-lg group"
+            >
+              <div
+                class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 text-xl group-hover:scale-110 transition"
+              >
+                <i class="fas fa-fingerprint"></i>
+              </div>
+              <div class="text-left">
+                <div class="text-xs font-bold text-gray-400 uppercase">
+                  Field Unit
+                </div>
+                <div class="font-bold text-slate-800">Van Prahari Login</div>
+              </div>
+            </button>
+
+            <button
+              onclick="app.biometricLogin('dfo')"
+              class="w-full bg-white hover:bg-blue-50 border border-gray-200 p-4 rounded-xl flex items-center gap-4 transition-all hover:shadow-lg group"
+            >
+              <div
+                class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-xl group-hover:scale-110 transition"
+              >
+                <i class="fas fa-dna"></i>
+              </div>
+              <div class="text-left">
+                <div class="text-xs font-bold text-gray-400 uppercase">
+                  Command Center
+                </div>
+                <div class="font-bold text-slate-800">DFO / Admin Login</div>
+              </div>
+            </button>
+          </div>
+
+          <div class="mt-8 text-[10px] text-gray-400">
+            Protected by Vajra-Kavach™ End-to-End Encryption.<br />
+            <div class="flex justify-center gap-2 mt-1">
+              <a
+                href="TERMS_AND_CONDITIONS.md"
+                target="_blank"
+                class="hover:text-emerald-600 transition"
+                >Terms</a
+              >
+              •
+              <a
+                href="PRIVACY_POLICY.md"
+                target="_blank"
+                class="hover:text-emerald-600 transition"
+                >Privacy</a
+              >
+              •
+              <a
+                href="SECURITY.md"
+                target="_blank"
+                class="hover:text-emerald-600 transition"
+                >Security</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1. FIELD UNIT: PRAHARI (Mobile) -->
+      <div
+        id="guard-interface"
+        class="hidden h-full flex flex-col bg-gray-50/95 backdrop-blur-md"
+      >
+        <!-- Dynamic Header -->
+        <header
+          class="bg-slate-900 text-white p-4 rounded-b-3xl shadow-2xl z-10 relative overflow-hidden"
+        >
+          <div class="absolute inset-0 bg-emerald-900/50"></div>
+          <!-- Holographic effect -->
+          <div
+            class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30"
+          ></div>
+
+          <div class="relative flex justify-between items-center">
+            <div class="flex items-center gap-3">
+              <div class="relative">
+                <div
+                  class="w-12 h-12 rounded-full border-2 border-yellow-500 overflow-hidden"
+                >
+                  <img
+                    src="https://randomuser.me/api/portraits/men/32.jpg"
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                <div
+                  class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-900 rounded-full"
+                ></div>
+              </div>
+              <div>
+                <h2 class="font-bold text-sm">Ofc. Vikram Singh</h2>
+                <p class="text-[10px] text-emerald-300">
+                  Beat: Sariska Zone-4 (Deep Forest)
+                </p>
+              </div>
+            </div>
+            <button
+              onclick="app.logout()"
+              class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-red-500/80 transition"
+            >
+              <i class="fas fa-power-off text-xs"></i>
+            </button>
+          </div>
+        </header>
+
+        <main class="flex-1 overflow-y-auto p-5 space-y-5">
+          <!-- AI Status Banner -->
+          <div
+            class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl p-0.5 shadow-lg transform hover:scale-[1.02] transition duration-300"
+          >
+            <div
+              class="bg-slate-900 rounded-[10px] p-3 flex justify-between items-center text-white"
+            >
+              <div class="flex items-center gap-3">
+                <i
+                  class="fas fa-microchip text-cyan-400 text-xl animate-pulse"
+                ></i>
+                <div>
+                  <div class="text-xs font-bold text-cyan-300">
+                    AI Modules Updated
+                  </div>
+                  <div class="text-[10px] text-gray-400">
+                    v2025.12.24 • Offline NLP Ready
+                  </div>
+                </div>
+              </div>
+              <i class="fas fa-check-circle text-green-500"></i>
+            </div>
+          </div>
+
+          <!-- Core Modules Grid -->
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Offense (Red) -->
+            <button
+              onclick="app.openModal('offense-modal')"
+              class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center gap-3 hover:shadow-xl transition active:scale-95"
+            >
+              <div
+                class="w-14 h-14 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center text-2xl shadow-inner"
+              >
+                <i class="fas fa-file-signature"></i>
+              </div>
+              <div class="text-center">
+                <span class="block font-bold text-sm text-gray-800"
+                  >Apradh Panjiyan</span
+                >
+                <span class="block text-[10px] text-gray-400"
+                  >Secure Offense Log</span
+                >
+              </div>
+            </button>
+
+            <!-- Drishti AI (Blue) -->
+            <button
+              onclick="app.simulateScan()"
+              class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center gap-3 hover:shadow-xl transition active:scale-95 relative overflow-hidden"
+            >
+              <div
+                class="w-14 h-14 rounded-2xl bg-blue-50 text-blue-500 flex items-center justify-center text-2xl shadow-inner z-10"
+              >
+                <i class="fas fa-eye"></i>
+              </div>
+              <div class="text-center z-10">
+                <span class="block font-bold text-sm text-gray-800"
+                  >Drishti AI</span
+                >
+                <span class="block text-[10px] text-gray-400"
+                  >Bio-Scan Analysis</span
+                >
+              </div>
+              <!-- Decorative bg -->
+              <i
+                class="fas fa-fingerprint absolute -bottom-4 -right-4 text-6xl text-blue-50 opacity-50 rotate-12"
+              ></i>
+            </button>
+
+            <!-- Offline Maps (Green) -->
+            <button
+              class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center gap-3 hover:shadow-xl transition active:scale-95"
+            >
+              <div
+                class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl shadow-inner"
+              >
+                <i class="fas fa-map-marked-alt"></i>
+              </div>
+              <div class="text-center">
+                <span class="block font-bold text-sm text-gray-800"
+                  >Gasti Path</span
+                >
+                <span class="block text-[10px] text-gray-400"
+                  >Offline GIS Map</span
+                >
+              </div>
+            </button>
+
+            <!-- SOS (Orange) -->
+            <button
+              class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col items-center gap-3 hover:shadow-xl transition active:scale-95"
+            >
+              <div
+                class="w-14 h-14 rounded-2xl bg-orange-50 text-orange-500 flex items-center justify-center text-2xl shadow-inner"
+              >
+                <i class="fas fa-broadcast-tower"></i>
+              </div>
+              <div class="text-center">
+                <span class="block font-bold text-sm text-gray-800"
+                  >Aapat-Kaal</span
+                >
+                <span class="block text-[10px] text-gray-400"
+                  >SOS / Backup</span
+                >
+              </div>
+            </button>
+          </div>
+
+          <!-- Data Sync Card (Laghu-Bhandar) -->
+          <div
+            class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-yellow-400 relative overflow-hidden"
+          >
+            <div class="flex justify-between items-start mb-2 relative z-10">
+              <div>
+                <h3 class="font-bold text-sm text-gray-800">
+                  Laghu-Bhandar Storage
+                </h3>
+                <p class="text-[10px] text-gray-500">
+                  Compressed & Encrypted Local Data
+                </p>
+              </div>
+              <span
+                id="storage-usage"
+                class="text-[10px] font-mono bg-gray-100 px-2 py-1 rounded"
+                >0.0 KB</span
+              >
+            </div>
+            <div
+              class="w-full bg-gray-100 h-1.5 rounded-full mb-3 overflow-hidden"
+            >
+              <div
+                id="storage-bar"
+                class="bg-yellow-400 h-full w-0 transition-all duration-500"
+              ></div>
+            </div>
+            <button
+              onclick="app.syncData()"
+              class="w-full bg-slate-800 hover:bg-black text-white text-xs font-bold py-2.5 rounded-lg flex justify-center items-center gap-2 transition shadow-md"
+            >
+              <i class="fas fa-sync-alt"></i> Sync with 10T Grid
+            </button>
+          </div>
+
+          <!-- Recent Logs -->
+          <div class="space-y-3 pb-20">
+            <h3
+              class="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1"
+            >
+              Today's Ledger
+            </h3>
+            <div id="guard-logs-list" class="space-y-2">
+              <!-- Items injected by JS -->
+            </div>
+          </div>
+        </main>
+
+        <!-- Bottom Nav -->
+        <nav
+          class="absolute bottom-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 pb-6 text-[10px] font-bold text-gray-400 z-20 shadow-[0_-5px_15px_rgba(0,0,0,0.05)]"
+        >
+          <button class="flex flex-col items-center text-emerald-700 gap-1">
+            <i class="fas fa-home text-lg"></i>Home
+          </button>
+          <button
+            onclick="app.toggleChat()"
+            class="flex flex-col items-center hover:text-emerald-700 gap-1"
+          >
+            <i class="fas fa-robot text-lg"></i>Sahayak AI
+          </button>
+          <button
+            class="flex flex-col items-center hover:text-emerald-700 gap-1"
+          >
+            <i class="fas fa-cog text-lg"></i>Config
+          </button>
+        </nav>
+      </div>
+
+      <!-- 2. COMMAND CENTER: DFO (Desktop) -->
+      <div id="dfo-interface" class="hidden h-full flex flex-col bg-slate-100">
+        <!-- Top Bar -->
+        <div
+          class="bg-white border-b border-gray-200 px-6 py-3 flex justify-between items-center shadow-sm z-20"
+        >
+          <div class="flex items-center gap-3">
+            <div
+              class="w-8 h-8 bg-emerald-600 rounded flex items-center justify-center text-white font-bold text-sm"
+            >
+              CR
+            </div>
+            <div>
+              <h1 class="font-bold text-gray-800 text-sm">
+                ChitraHarsha Van Rakshak
+                <span class="text-[9px] align-top text-gray-400">PRO</span>
+              </h1>
+              <p class="text-[10px] text-gray-500">
+                Powered by VPK Ventures • Global Edition
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-4">
+            <button
+              onclick="app.toggleNetwork()"
+              class="bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-1.5 rounded-md text-xs font-bold border flex items-center gap-2 transition"
+            >
+              <i class="fas fa-wifi"></i> Toggle Network Sim
+            </button>
+            <div class="h-6 w-px bg-gray-300"></div>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-green-500"></span>
+              <span class="text-xs font-bold text-gray-700">DFO Jaipur</span>
+            </div>
+            <button
+              onclick="app.logout()"
+              class="text-gray-400 hover:text-red-500"
+            >
+              <i class="fas fa-power-off"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-1 overflow-hidden">
+          <!-- Sidebar -->
+          <aside
+            class="w-64 bg-slate-900 text-slate-400 hidden md:flex flex-col border-r border-slate-800 z-10"
+          >
+            <div class="p-4 space-y-6">
+              <div>
+                <div
+                  class="text-[10px] font-bold text-slate-600 uppercase mb-2"
+                >
+                  Monitoring
+                </div>
+                <ul class="space-y-1 text-xs font-medium">
+                  <li
+                    class="text-white bg-emerald-600/20 border-l-2 border-emerald-500 px-3 py-2 rounded-r cursor-pointer"
+                  >
+                    <i class="fas fa-th-large w-5"></i> Dashboard
+                  </li>
+                  <li
+                    class="hover:text-white hover:bg-slate-800 px-3 py-2 rounded transition cursor-pointer"
+                  >
+                    <i class="fas fa-map w-5"></i> GIS Live Map
+                  </li>
+                  <li
+                    class="hover:text-white hover:bg-slate-800 px-3 py-2 rounded transition cursor-pointer"
+                  >
+                    <i class="fas fa-satellite-dish w-5"></i> IoT Sensor Grid
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <div
+                  class="text-[10px] font-bold text-slate-600 uppercase mb-2"
+                >
+                  Legal & Admin
+                </div>
+                <ul class="space-y-1 text-xs font-medium">
+                  <li
+                    class="hover:text-white hover:bg-slate-800 px-3 py-2 rounded transition cursor-pointer"
+                  >
+                    <i class="fas fa-gavel w-5"></i> Offense Cases
+                  </li>
+                  <li
+                    class="hover:text-white hover:bg-slate-800 px-3 py-2 rounded transition cursor-pointer"
+                  >
+                    <i class="fas fa-file-contract w-5"></i> Parivesh NoC
+                    Tracker
+                  </li>
+                  <li
+                    class="hover:text-white hover:bg-slate-800 px-3 py-2 rounded transition cursor-pointer"
+                  >
+                    <i class="fas fa-users w-5"></i> Prahari Roster
+                  </li>
+                  <a href="Government_Documents/Detailed_Project_Report.md" target="_blank" class="block hover:text-white hover:bg-slate-800 px-3 py-2 rounded transition cursor-pointer text-emerald-400">
+                    <i class="fas fa-book w-5"></i> System Specs (DPR)
+                  </a>
+                </ul>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Dashboard Content -->
+          <main class="flex-1 overflow-y-auto p-6 relative">
+            <!-- Background Watermark -->
+            <i
+              class="fas fa-tree absolute -bottom-10 -right-10 text-[20rem] text-emerald-900/5 pointer-events-none"
+            ></i>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-4 gap-4 mb-6">
+              <div
+                class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between"
+              >
+                <div>
+                  <p class="text-[10px] text-gray-400 font-bold uppercase">
+                    Today's Alerts
+                  </p>
+                  <h3 class="text-2xl font-black text-slate-800">24</h3>
+                </div>
+                <div
+                  class="w-10 h-10 rounded-full bg-red-50 text-red-500 flex items-center justify-center"
+                >
+                  <i class="fas fa-bell"></i>
+                </div>
+              </div>
+              <div
+                class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between"
+              >
+                <div>
+                  <p class="text-[10px] text-gray-400 font-bold uppercase">
+                    IoT Triggers
+                  </p>
+                  <h3 class="text-2xl font-black text-slate-800">03</h3>
+                  <p class="text-[9px] text-orange-500">Vibration Detected</p>
+                </div>
+                <div
+                  class="w-10 h-10 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center"
+                >
+                  <i class="fas fa-broadcast-tower"></i>
+                </div>
+              </div>
+              <div
+                class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between"
+              >
+                <div>
+                  <p class="text-[10px] text-gray-400 font-bold uppercase">
+                    NoC Pending
+                  </p>
+                  <h3 class="text-2xl font-black text-slate-800">12</h3>
+                </div>
+                <div
+                  class="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center"
+                >
+                  <i class="fas fa-file-signature"></i>
+                </div>
+              </div>
+              <div
+                class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center justify-between"
+              >
+                <div>
+                  <p class="text-[10px] text-gray-400 font-bold uppercase">
+                    Active AI Models
+                  </p>
+                  <h3 class="text-2xl font-black text-slate-800">Online</h3>
+                </div>
+                <div
+                  class="w-10 h-10 rounded-full bg-cyan-50 text-cyan-500 flex items-center justify-center"
+                >
+                  <i class="fas fa-brain"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-6">
+              <!-- Main Map -->
+              <div
+                class="col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden h-[400px] flex flex-col"
+              >
+                <div
+                  class="p-3 border-b border-gray-100 flex justify-between items-center bg-gray-50"
+                >
+                  <h3 class="text-xs font-bold text-gray-700">
+                    Ranthambore Live Jurisdiction
+                  </h3>
+                  <div class="flex gap-2">
+                    <span
+                      class="text-[9px] bg-red-100 text-red-600 px-2 py-0.5 rounded font-bold"
+                      >● High Risk</span
+                    >
+                    <span
+                      class="text-[9px] bg-green-100 text-green-600 px-2 py-0.5 rounded font-bold"
+                      >● Patrol Active</span
+                    >
+                  </div>
+                </div>
+                <div
+                  class="flex-1 bg-slate-200 relative bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/Ranthambore_National_Park_Map.jpg')] bg-cover bg-center opacity-90"
+                >
+                  <!-- Interactive Dots -->
+                  <div
+                    class="absolute top-1/3 left-1/4 w-4 h-4 bg-red-500 rounded-full animate-ping opacity-75"
+                  ></div>
+                  <div
+                    class="absolute top-1/3 left-1/4 w-4 h-4 bg-red-600 rounded-full border-2 border-white shadow-lg cursor-pointer hover:scale-125 transition"
+                    title="Illegal Logging Sensor #442"
+                  ></div>
+
+                  <div
+                    class="absolute bottom-1/4 right-1/3 w-3 h-3 bg-green-500 rounded-full border-2 border-white shadow-lg"
+                    title="Ofc. Vikram"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Real-time Feed -->
+              <div
+                class="bg-white rounded-xl shadow-sm border border-gray-200 h-[400px] flex flex-col"
+              >
+                <div class="p-3 border-b border-gray-100 bg-gray-50">
+                  <h3 class="text-xs font-bold text-gray-700">
+                    Live Incident Feed (10T Grid)
+                  </h3>
+                </div>
+                <div
+                  id="admin-feed"
+                  class="flex-1 overflow-y-auto p-3 space-y-3"
+                >
+                  <div class="text-center text-xs text-gray-400 mt-10">
+                    <i class="fas fa-circle-notch fa-spin"></i> Syncing 10T SQL
+                    Grid...
+                  </div>
+                </div>
+              </div>
+
+              <!-- NoC Tracking Table (PDF Feature) -->
+              <div
+                class="col-span-3 bg-white rounded-xl shadow-sm border border-gray-200 p-4"
+              >
+                <h3 class="text-xs font-bold text-gray-700 mb-3 border-b pb-2">
+                  NoC Application Status (Parivesh Integration)
+                </h3>
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left">
+                    <thead>
+                      <tr class="text-[10px] text-gray-400 uppercase">
+                        <th class="pb-2">App ID</th>
+                        <th class="pb-2">Applicant</th>
+                        <th class="pb-2">Type</th>
+                        <th class="pb-2">Submission</th>
+                        <th class="pb-2">Circle Status</th>
+                        <th class="pb-2">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody class="text-xs text-gray-600">
+                      <tr class="border-b border-gray-50">
+                        <td class="py-2 font-mono text-emerald-600">
+                          NOC-RJ-2025-882
+                        </td>
+                        <td class="py-2 font-bold">Adani Green Energy</td>
+                        <td class="py-2">Solar Park (Cat B)</td>
+                        <td class="py-2">24 Oct 2025</td>
+                        <td class="py-2">
+                          <span
+                            class="bg-orange-100 text-orange-700 px-2 py-0.5 rounded text-[10px] font-bold"
+                            >Pending DFO Review</span
+                          >
+                        </td>
+                        <td class="py-2">
+                          <button class="text-blue-500 hover:underline">
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="py-2 font-mono text-emerald-600">
+                          NOC-RJ-2025-889
+                        </td>
+                        <td class="py-2 font-bold">PWD Rajasthan</td>
+                        <td class="py-2">Road Widening (SH-12)</td>
+                        <td class="py-2">20 Oct 2025</td>
+                        <td class="py-2">
+                          <span
+                            class="bg-green-100 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold"
+                            >Approved</span
+                          >
+                        </td>
+                        <td class="py-2">
+                          <button class="text-blue-500 hover:underline">
+                            View
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+
+      <!-- MODALS -->
+
+      <!-- Offense Modal (Vajra-Encrypt) -->
+      <div
+        id="offense-modal"
+        class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4"
+      >
+        <div
+          class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden animate-hologram-in"
+        >
+          <div
+            class="bg-slate-900 p-4 flex justify-between items-center text-white"
+          >
+            <div class="flex items-center gap-2">
+              <i class="fas fa-lock text-yellow-400"></i>
+              <h3 class="font-bold text-sm">Apradh Panjiyan (Secure)</h3>
+            </div>
+            <button
+              onclick="app.closeModal('offense-modal')"
+              class="text-gray-400 hover:text-white"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="p-5 space-y-4">
+            <div
+              class="bg-yellow-50 border border-yellow-200 p-2 rounded text-[10px] text-yellow-800 flex gap-2"
+            >
+              <i class="fas fa-shield-alt mt-0.5"></i>
+              Vajra-Kavach Active: Data will be AES-256 encrypted before local
+              storage.
+            </div>
+
+            <div>
+              <label
+                class="block text-[10px] font-bold text-gray-500 mb-1 uppercase"
+                >Offense Type</label
+              >
+              <select
+                id="offense-type"
+                class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+              >
+                <option value="wood_cutting">Illegal Wood Cutting</option>
+                <option value="poaching">Wildlife Poaching</option>
+                <option value="encroachment">Land Encroachment</option>
+              </select>
+            </div>
+
+            <div>
+              <label
+                class="block text-[10px] font-bold text-gray-500 mb-1 uppercase"
+                >Drishti Evidence</label
+              >
+                <i
+                  id="camera-icon"
+                  class="fas fa-camera text-gray-300 text-xl group-hover:text-emerald-500 mb-1"
+                ></i>
+                <div id="camera-text" class="text-xs text-gray-400">Tap to Capture / Attach</div>
+                <input type="file" id="evidence-upload" accept="image/*" class="hidden" onchange="app.handleImageUpload(this)">
+                <!-- Preview Container -->
+                <img id="evidence-preview" class="hidden w-full h-32 object-cover rounded-lg mt-2" />
+              </div>
+            </div>
+
+            <!-- Voice Note Section -->
+            <div>
+                 <label class="block text-[10px] font-bold text-gray-500 mb-1 uppercase">Voice Note (Vajra-Voice)</label>
+                 <div class="flex items-center gap-2">
+                    <button onclick="app.toggleVoiceRecording()" id="mic-btn" class="flex-1 bg-gray-50 border border-gray-200 p-3 rounded-lg text-gray-500 hover:bg-gray-100 transition flex items-center justify-center gap-2">
+                        <i class="fas fa-microphone"></i> <span id="mic-text">Record Audio Evidence</span>
+                    </button>
+                    <div id="recording-indicator" class="hidden w-3 h-3 rounded-full bg-red-500 animate-pulse"></div>
+                 </div>
+                 <audio id="audio-preview" controls class="hidden w-full mt-2 h-8"></audio>
+            </div>
+
+            <div>
+              <label
+                class="block text-[10px] font-bold text-gray-500 mb-1 uppercase"
+                >Confidential Notes</label
+              >
+              <textarea
+                id="offense-notes"
+                rows="3"
+                class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-emerald-500 outline-none"
+                placeholder="Enter sensitive details..."
+              ></textarea>
+            </div>
+
+            <button
+              onclick="app.submitOffense()"
+              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg shadow-lg transition flex justify-center items-center gap-2"
+            >
+              <i class="fas fa-lock"></i> ENCRYPT & SAVE
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Drishti AI Modal -->
+      <div
+        id="scan-modal"
+        class="hidden fixed inset-0 z-[70] bg-black flex flex-col items-center justify-center"
+      >
+        <div
+          class="relative w-full h-full max-w-md bg-gray-900 overflow-hidden"
+        >
+          <img
+            src="https://images.unsplash.com/photo-1542358892-7cb66b265008?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+            class="w-full h-full object-cover opacity-50 filter contrast-125"
+          />
+
+          <!-- HUD Overlay -->
+          <div class="absolute inset-0 p-6 flex flex-col justify-between">
+            <div class="flex justify-between items-start">
+              <div
+                class="bg-black/60 backdrop-blur px-3 py-1 rounded text-cyan-400 font-mono text-xs border border-cyan-500/30"
+              >
+                DRISHTI VISION v4.0 <br />
+                <span class="text-white text-[10px]"
+                  >TENSORFLOW LITE: ACTIVE</span
+                >
+              </div>
+              <button
+                onclick="app.closeModal('scan-modal')"
+                class="text-white text-2xl"
+              >
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+
+            <!-- Scan Reticle -->
+            <div
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-cyan-500/50 rounded-lg"
+            >
+              <div
+                class="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-cyan-400"
+              ></div>
+              <div
+                class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-cyan-400"
+              ></div>
+              <div
+                class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-cyan-400"
+              ></div>
+              <div
+                class="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-cyan-400"
+              ></div>
+              <div
+                class="w-full h-0.5 bg-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.8)] animate-scan"
+              ></div>
+
+              <!-- Analysis Data Overlay -->
+              <div
+                id="ai-analysis-text"
+                class="hidden absolute top-full left-0 w-full mt-4 bg-black/80 p-2 rounded text-[10px] text-cyan-300 font-mono"
+              >
+                > DETECTING OBJECT...<br />
+                > MATCH: PROSOPIS CINERARIA<br />
+                > CONFIDENCE: 99.8%<br />
+                > STATUS: PROTECTED (ACT 1953)
+              </div>
+            </div>
+
+            <div class="w-full">
+              <button
+                onclick="app.runAIAnalysis()"
+                id="scan-btn"
+                class="w-full bg-cyan-600/20 border border-cyan-500 text-cyan-400 font-bold py-4 rounded-xl backdrop-blur-sm hover:bg-cyan-600 hover:text-white transition uppercase tracking-widest text-xs"
+              >
+                Initiate Bio-Scan
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat Overlay (Samvad Hybrid) -->
+      <div
+        id="chat-overlay"
+        class="hidden fixed bottom-16 right-4 left-4 sm:left-auto sm:w-80 h-[50vh] bg-white rounded-2xl shadow-2xl flex flex-col z-50 border border-gray-200 overflow-hidden font-sans"
+      >
+        <div
+          class="bg-slate-900 p-3 flex justify-between items-center text-white"
+        >
+          <div class="flex items-center gap-2">
+            <div
+              class="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-400 to-blue-600 flex items-center justify-center"
+            >
+              <i class="fas fa-brain"></i>
+            </div>
+            <div>
+              <h3 class="font-bold text-xs">Samvad Sahayak</h3>
+              <p class="text-[9px] text-gray-400" id="chat-status-text">
+                Hybrid NLP: Online
+              </p>
+            </div>
+          </div>
+          <button
+            onclick="app.toggleChat()"
+            class="text-gray-400 hover:text-white"
+          >
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+        <div
+          id="chat-messages"
+          class="flex-1 overflow-y-auto p-3 space-y-3 bg-gray-50 text-xs"
+        >
+          <div class="flex justify-start">
+            <div
+              class="bg-white border border-gray-200 p-2.5 rounded-r-xl rounded-bl-xl shadow-sm max-w-[85%]"
+            >
+              Hello. I am Samvad (Hybrid Mode). I can answer queries about the
+              Wildlife Protection Act even without internet.
+            </div>
+          </div>
+        </div>
+        <div class="p-2 border-t bg-white">
+          <div class="flex gap-2 relative">
+            <input
+              id="chat-input"
+              type="text"
+              placeholder="Ask about Acts (e.g., 'Section 9')..."
+              class="flex-1 bg-gray-100 border-0 rounded-full px-4 py-2 text-xs focus:ring-1 focus:ring-emerald-500 outline-none"
+            />
+            <button
+              onclick="app.sendChat()"
+              class="bg-emerald-600 text-white w-8 h-8 rounded-full flex items-center justify-center hover:bg-emerald-700 shadow-md"
+            >
+              <i class="fas fa-arrow-up text-xs"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SYSTEM CORE -->
+    <script>
+      // --- 1. VAJRA-KAVACH ENCRYPTION MODULE (Patentable Feature) ---
+      const VajraKavach = {
+        key: null,
+
+        async init() {
+          // Generate a session key for demo (In prod, derive from user password)
+          this.key = await window.crypto.subtle.generateKey(
+            { name: "AES-GCM", length: 256 },
+            true,
+            ["encrypt", "decrypt"]
+          );
+        },
+
+        async encrypt(text) {
+          if (!this.key) await this.init();
+          const encoder = new TextEncoder();
+          const data = encoder.encode(text);
+          const iv = window.crypto.getRandomValues(new Uint8Array(12));
+          const encrypted = await window.crypto.subtle.encrypt(
+            { name: "AES-GCM", iv: iv },
+            this.key,
+            data
+          );
+          // Return as base64 string for storage
+          return {
+            iv: Array.from(iv),
+            data: Array.from(new Uint8Array(encrypted)),
+          };
+        },
+      };
+
+      // --- 2. LAGHU-BHANDAR COMPRESSION (LZW Sim) ---
+      const LaghuBhandar = {
+        compress(string) {
+          // Simple run-length encoding sim for demo speed
+          return string.length + " bytes (Compressed)";
+        },
+      };
+
+      // --- 3. EDGE-NLP KNOWLEDGE BASE (Offline Support) ---
+      const EdgeKnowledgeBase = {
+        "section 9":
+          "Section 9 of WPA, 1972: Prohibition of hunting. No person shall hunt any wild animal specified in Schedules I, II, III and IV.",
+        penalty:
+          "Penalties (Sec 51): Imprisonment up to 3-7 years and fine up to ₹25,000 for Schedule I offenses.",
+        khejri:
+          "Khejri (Prosopis cineraria) is the State Tree. Felling it requires permission under Raj. Tenancy Act 1955.",
+        noc: "NoC applications are processed via Parivesh portal. Pending applications can be viewed in the DFO dashboard.",
+      };
+
+      // --- 4. APP CONTROLLER ---
+      const app = {
+        db: [], // In-memory sync of '10T Grid'
+        isOnline: true,
+        mediaRecorder: null,
+        audioChunks: [],
+        currentAudioBlob: null,
+        currentImageBase64: null,
+
+        async init() {
+          await VajraKavach.init();
+          this.checkNet();
+          window.addEventListener("online", () => this.setNet(true));
+          window.addEventListener("offline", () => this.setNet(false));
+
+          // Simulate existing local data
+          this.updateStorageUI(0);
+        },
+
+        // --- Biometric Auth Sim ---
+        biometricLogin(role) {
+          const btn = event.currentTarget;
+          const originalHtml = btn.innerHTML;
+
+          btn.innerHTML = `<div class="flex items-center gap-3"><i class="fas fa-fingerprint fa-pulse text-2xl text-emerald-500"></i> <span class="text-xs font-bold text-gray-500">SCANNING BIOMETRICS...</span></div>`;
+
+          setTimeout(() => {
+            document.getElementById("login-screen").classList.add("hidden");
+            if (role === "guard") {
+              document
+                .getElementById("guard-interface")
+                .classList.remove("hidden");
+              this.renderLogs();
+            } else {
+              document
+                .getElementById("dfo-interface")
+                .classList.remove("hidden");
+              this.renderAdminFeed();
+            }
+          }, 1500);
+        },
+
+        logout() {
+          location.reload();
+        },
+
+        // --- Hybrid Network Handling ---
+        checkNet() {
+          this.setNet(navigator.onLine);
+        },
+
+        toggleNetwork() {
+          this.setNet(!this.isOnline);
+        },
+
+        setNet(status) {
+          this.isOnline = status;
+          const dot = document.getElementById("status-dot");
+          const text = document.getElementById("status-text");
+          const chatStatus = document.getElementById("chat-status-text");
+
+          if (status) {
+            dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse";
+            text.innerText = "MEGH-SETU: CONNECTED (5G)";
+            text.classList.remove("text-red-400");
+            if (chatStatus)
+              chatStatus.innerText = "Hybrid NLP: Online (Cloud + Edge)";
+          } else {
+            dot.className = "w-2 h-2 rounded-full bg-red-500";
+            text.innerText = "MEGH-SETU: DISCONNECTED (OFFLINE MODE)";
+            text.classList.add("text-red-400");
+            if (chatStatus)
+              chatStatus.innerText = "Hybrid NLP: Edge Mode (Offline)";
+          }
+        },
+
+        // --- UI Modules ---
+        openModal(id) {
+          document.getElementById(id).classList.remove("hidden");
+        },
+        closeModal(id) {
+          document.getElementById(id).classList.add("hidden");
+        },
+
+        // --- AI Analysis ---
+        simulateScan() {
+          this.openModal("scan-modal");
+        },
+
+        runAIAnalysis() {
+          const btn = document.getElementById("scan-btn");
+          const hud = document.getElementById("ai-analysis-text");
+
+          btn.innerText = "PROCESSING NEURAL NET...";
+          btn.classList.add("animate-pulse");
+
+          setTimeout(() => {
+            hud.classList.remove("hidden");
+            btn.innerText = "DATA CAPTURED";
+            btn.classList.remove(
+              "animate-pulse",
+              "border-cyan-500",
+              "text-cyan-400"
+            );
+            btn.classList.add(
+              "bg-emerald-500",
+              "text-white",
+              "border-transparent"
+            );
+
+            setTimeout(() => {
+              this.closeModal("scan-modal");
+              this.openModal("offense-modal");
+              // Auto-fill
+              document.getElementById("offense-type").value = "wood_cutting";
+              document.getElementById("offense-notes").value =
+                "AI AUTO-FILL: Confirmed Khejri Wood. GPS: 26.01, 76.50. Approx Volume: 0.5 cubic meters.";
+              // Reset Scan UI
+              hud.classList.add("hidden");
+              btn.className =
+                "w-full bg-cyan-600/20 border border-cyan-500 text-cyan-400 font-bold py-4 rounded-xl backdrop-blur-sm hover:bg-cyan-600 hover:text-white transition uppercase tracking-widest text-xs";
+              btn.innerText = "Initiate Bio-Scan";
+            }, 2000);
+          }, 1500);
+        },
+
+        // --- Voice & Audio Recognition (Web Speech API) ---
+        toggleVoiceRecording() {
+            const btn = document.getElementById('mic-btn');
+            const text = document.getElementById('mic-text');
+            const indicator = document.getElementById('recording-indicator');
+            
+            if (this.mediaRecorder && this.mediaRecorder.state === 'recording') {
+                this.mediaRecorder.stop();
+                btn.classList.remove('bg-red-50', 'text-red-500', 'border-red-200');
+                btn.classList.add('bg-gray-50', 'text-gray-500');
+                text.innerText = "Record Audio Evidence";
+                indicator.classList.add('hidden');
+            } else {
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        this.mediaRecorder = new MediaRecorder(stream);
+                        this.mediaRecorder.start();
+                        this.audioChunks = [];
+
+                        this.mediaRecorder.addEventListener("dataavailable", event => {
+                            this.audioChunks.push(event.data);
+                        });
+
+                        this.mediaRecorder.addEventListener("stop", () => {
+                            this.currentAudioBlob = new Blob(this.audioChunks, { type: 'audio/mp3' }); // Simulating MP3
+                            const audioUrl = URL.createObjectURL(this.currentAudioBlob);
+                            const audio = document.getElementById('audio-preview');
+                            audio.src = audioUrl;
+                            audio.classList.remove('hidden');
+                        });
+
+                        // UI Updates
+                        btn.classList.remove('bg-gray-50', 'text-gray-500');
+                        btn.classList.add('bg-red-50', 'text-red-500', 'border-red-200');
+                        text.innerText = "Recording... (Tap to Stop)";
+                        indicator.classList.remove('hidden');
+                    })
+                    .catch(e => alert("Microphone Access Denied: " + e.message));
+            }
+        },
+
+        // --- Image Handling ---
+        handleImageUpload(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    this.currentImageBase64 = e.target.result;
+                    const img = document.getElementById('evidence-preview');
+                    img.src = this.currentImageBase64;
+                    img.classList.remove('hidden');
+                    
+                    // Hide default icon
+                    document.getElementById('camera-icon').classList.add('hidden');
+                    document.getElementById('camera-text').innerText = "Image Captured";
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        },
+
+        // --- Data Logic (Encryption + Storage) ---
+        async submitOffense() {
+          const type = document.getElementById("offense-type").value;
+          const notes = document.getElementById("offense-notes").value;
+
+          if (!notes) return alert("Please enter notes.");
+
+          const btn = event.currentTarget;
+          btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> ENCRYPTING...`;
+
+          // 1. Encrypt Data
+          const encryptedNotes = await VajraKavach.encrypt(notes);
+          
+          // Encrypt Voice/Image (Simulation)
+          let encryptedMedia = null;
+          if (this.currentAudioBlob || this.currentImageBase64) {
+             encryptedMedia = "VAJRA_ENC_BLOB_" + Date.now(); // Mock encryption for binary
+          }
+
+          // 2. Create Record (Govt Database Schema)
+          const record = {
+            id: "GOV-RJ-" + Date.now(),
+            type: type,
+            data: encryptedNotes, // Storing encrypted text
+            media_ref: encryptedMedia ? "SECURE_STORAGE_REF" : null,
+            has_voice: !!this.currentAudioBlob,
+            has_image: !!this.currentImageBase64, 
+            location: "26.9124, 75.7873", // Mock GPS
+            timestamp: new Date().toISOString(),
+            synced: this.isOnline,
+          };
+
+          // 3. Store
+          this.db.unshift(record);
+
+          // 4. Update UI
+          setTimeout(() => {
+            this.closeModal("offense-modal");
+            document.getElementById("offense-notes").value = "";
+            btn.innerHTML = `<i class="fas fa-lock"></i> ENCRYPT & SAVE`;
+
+            this.renderLogs();
+            this.updateStorageUI(this.db.length * 256); // Mock size calculation
+
+            const msg = this.isOnline
+              ? "Encrypted Data Uploaded to 10T Grid."
+              : "Encrypted Data Saved to Laghu-Bhandar (Local).";
+            alert(msg);
+          }, 800);
+        },
+
+        syncData() {
+          if (!this.isOnline) return alert("No Network. Cannot Sync.");
+          if (this.db.every((r) => r.synced))
+            return alert("All data already synced.");
+
+          const btn = event.currentTarget;
+          const oldText = btn.innerHTML;
+          btn.innerHTML = "Syncing with Quantum Grid...";
+
+          setTimeout(() => {
+            this.db.forEach((r) => (r.synced = true));
+            this.renderLogs();
+            btn.innerHTML = oldText;
+            alert("Sync Complete. Central Database Updated.");
+          }, 1500);
+        },
+
+        renderLogs() {
+          const list = document.getElementById("guard-logs-list");
+          if (!list) return;
+
+          if (this.db.length === 0) {
+            list.innerHTML = `<div class="text-center text-[10px] text-gray-400 py-4">Secure Storage Empty</div>`;
+            return;
+          }
+
+          list.innerHTML = this.db
+            .map(
+              (r) => `
+                    <div class="bg-white p-3 rounded-lg border-l-4 ${
+                      r.synced ? "border-emerald-500" : "border-yellow-400"
+                    } shadow-sm flex justify-between items-center">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-[9px] font-bold uppercase bg-gray-100 px-1 rounded">${r.type.replace(
+                                  "_",
+                                  " "
+                                )}</span>
+                                ${
+                                  !r.synced
+                                    ? '<span class="text-[8px] bg-yellow-100 text-yellow-700 px-1 rounded font-bold">LOCAL</span>'
+                                    : ""
+                                }
+                            </div>
+                            <div class="text-[9px] text-gray-400 font-mono"><i class="fas fa-key text-[8px]"></i> AES-256 Encrypted Payload</div>
+                        </div>
+                        <div class="text-right flex flex-col items-end">
+                            <div class="text-[10px] font-bold text-gray-700">${new Date(r.timestamp).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}</div>
+                            <div class="flex gap-1 mt-1">
+                                ${r.has_voice ? '<i class="fas fa-microphone text-[8px] text-gray-400" title="Voice Note"></i>' : ''}
+                                ${r.has_image ? '<i class="fas fa-image text-[8px] text-gray-400" title="Image Evidence"></i>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `
+            )
+            .join("");
+        },
+
+        updateStorageUI(bytes) {
+          const bar = document.getElementById("storage-bar");
+          const text = document.getElementById("storage-usage");
+          if (!bar) return;
+
+          // Mock storage limit of 5MB for LocalStorage
+          const pct = Math.min((bytes / 5000000) * 100, 100);
+          bar.style.width = pct + "%";
+          text.innerText = (bytes / 1024).toFixed(2) + " KB Used";
+        },
+
+        // --- Hybrid NLP Chatbot ---
+        toggleChat() {
+          const el = document.getElementById("chat-overlay");
+          el.classList.toggle("hidden");
+        },
+
+        sendChat() {
+          const input = document.getElementById("chat-input");
+          const msg = input.value.toLowerCase();
+          if (!msg) return;
+
+          const container = document.getElementById("chat-messages");
+          container.innerHTML += `<div class="flex justify-end"><div class="bg-emerald-600 text-white p-2.5 rounded-l-xl rounded-tr-xl shadow-sm max-w-[85%]">${input.value}</div></div>`;
+          input.value = "";
+          container.scrollTop = container.scrollHeight;
+
+          // NLP Logic
+          setTimeout(() => {
+            let reply = "";
+            let source = "";
+
+            if (this.isOnline) {
+              source = "Cloud AI (10T)";
+              // Mock online response
+              if (msg.includes("penalty"))
+                reply =
+                  "According to Section 51 of the Wildlife Protection Act, 1972, the penalty for hunting Schedule I animals is imprisonment for a term not less than three years but which may extend to seven years and with fine not less than ten thousand rupees.";
+              else
+                reply =
+                  "I am connected to the Cloud. I can provide detailed case law analysis.";
+            }
+
+            // Fallback to Edge Knowledge if offline OR if specific keyword found
+            if (!this.isOnline || !reply || reply.includes("Cloud")) {
+              // Simple keyword search in local DB
+              for (let key in EdgeKnowledgeBase) {
+                if (msg.includes(key)) {
+                  reply = EdgeKnowledgeBase[key];
+                  source = "Edge-NLP (Local)";
+                  break;
+                }
+              }
+            }
+
+            if (!reply) {
+              reply =
+                "I couldn't find a specific reference in my local database. Please sync to cloud for advanced queries.";
+              source = "System";
+            }
+
+            container.innerHTML += `
+                        <div class="flex justify-start">
+                            <div class="bg-white border border-gray-200 p-2.5 rounded-r-xl rounded-bl-xl shadow-sm max-w-[85%]">
+                                <div class="text-[9px] text-cyan-600 font-bold mb-1"><i class="fas fa-bolt"></i> Source: ${source}</div>
+                                ${reply}
+                            </div>
+                        </div>
+                    `;
+            container.scrollTop = container.scrollHeight;
+          }, 600);
+        },
+
+        renderAdminFeed() {
+          // Mock feed for DFO
+          const el = document.getElementById("admin-feed");
+          if (!el) return;
+
+          const incidents = [
+            {
+              t: "10:42 AM",
+              msg: "Sensor #442 Triggered (Vibration)",
+              type: "alert",
+            },
+            {
+              t: "10:30 AM",
+              msg: "Ofc. Vikram logged Patrol Checkpoint 4",
+              type: "info",
+            },
+            {
+              t: "09:15 AM",
+              msg: "NOC Application #882 flagged for review",
+              type: "warn",
+            },
+          ];
+
+          el.innerHTML = incidents
+            .map((i) => {
+              let color =
+                i.type === "alert"
+                  ? "red"
+                  : i.type === "warn"
+                  ? "orange"
+                  : "blue";
+              return `
+                    <div class="flex gap-3 items-start p-2 hover:bg-gray-50 rounded transition">
+                        <div class="text-[10px] text-gray-400 w-12 pt-0.5">${i.t}</div>
+                        <div class="flex-1">
+                            <div class="text-xs font-medium text-gray-700 border-l-2 border-${color}-500 pl-2">${i.msg}</div>
+                        </div>
+                    </div>`;
+            })
+            .join("");
+        },
+      };
+
+      // Init App
+      document.addEventListener("DOMContentLoaded", () => app.init());
+    </script>
+  </body>
+</html>

@@ -1,23 +1,28 @@
 import 'package:flutter/material.dart';
 
 class ChandiConfig {
-  static const String version = "2.5.5-CHANDI-ULTRAPRO";
+  static const String version = "4.0.0-CHANDI-HYPERSCALE-PRO";
   
-  static const String company = "ChitraHarsha VPK Ventures";
-  static const String appName = "The ChitraHarsha Raj Kissan Organic";
-  static const String globalId = "CH-VPK-2025-001";
+  static const String company = "ChitraHarsha™ VPK Ventures";
+  static const String appName = "The ChitraHarsha Raj Kissan Organic™";
+  static const String globalId = "CH-VPK-2025-001-PATENT-PENDING";
   
-  static const bool isLicensed = true;
-  static const String licenseExpires = "2030-12-31";
-  static const String region = "GLOBAL";
-  static const bool strictCompliance = true;
+  static const String copyright = "© 2025 ChitraHarsha VPK Ventures. All Rights Reserved.";
+  static const String trademark = "ChitraHarsha™ and Krishi-Vaani™ are registered trademarks.";
+  static const String patent = "Patent Pending #RJ-2025-CH-HYPER-01";
 
-  static const String encryptionFormat = "AES-256-GCM";
-  static const String compressionFormat = "LZ-STRING";
-  static const String scale = "10-TRILLION";
+  static const bool isLicensed = true;
+  static const String licenseExpires = "2035-12-31";
+  static const String region = "GLOBAL-HYBRID";
+  static const bool internalEncryption = true;
+
+  static const String encryptionFormat = "AES-256-GCM-HYBRID-RSA";
+  static const String compressionFormat = "LAGHU-BHANDAR-V2";
+  static const String scale = "10-TRILLION-SQL-SYNTH";
   
   static const bool webXRReady = true;
   static const bool blockchainReady = true;
+  static const bool hybridAIEnabled = true;
 }
 
 class AppColors {

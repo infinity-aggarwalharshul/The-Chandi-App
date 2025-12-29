@@ -98,12 +98,21 @@ class _SellScreenState extends State<SellScreen> {
     }
   }
 
+  Map<String, dynamic>? _lastAiResponse;
+
   void _processTranscript(String text) {
-    final data = AIProcessor.process(text);
+    final state = context.read<AppState>();
+    final data = AIProcessor.process(
+      text, 
+      isOnline: state.isOnline, 
+      lang: state.currentLanguage
+    );
+    
     setState(() {
       _cropController.text = data['crop'] ?? "";
       _qtyController.text = data['quantity'] ?? "";
       _priceController.text = data['price'] ?? "";
+      _lastAiResponse = data;
       _isListening = false;
     });
   }
@@ -146,6 +155,8 @@ class _SellScreenState extends State<SellScreen> {
 
         // Voice Assistant
         _buildVoiceTrigger(),
+
+        if (_lastAiResponse != null) _buildNoveltyCard(),
 
         const SizedBox(height: 24),
         _buildTextField("Crop (Fasal)", _cropController, "e.g. Organic Bajra"),
@@ -311,6 +322,63 @@ class _SellScreenState extends State<SellScreen> {
           TextField(
             controller: _nomineeRelationController,
             decoration: const InputDecoration(hintText: "Relationship", isDense: true),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNoveltyCard() {
+    final novelty = _lastAiResponse!['novelty'];
+    final bool isHigh = novelty['tag'] == "PLATINUM_LISTING";
+    
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isHigh ? AppColors.rajBlue.withOpacity(0.05) : Colors.grey.shade50,
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: isHigh ? AppColors.rajBlue.withOpacity(0.1) : Colors.transparent),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(isHigh ? Icons.auto_awesome : Icons.analytics, 
+                size: 16, color: isHigh ? AppColors.rajBlue : Colors.grey),
+              const SizedBox(width: 8),
+              Text(
+                "SARATHI NOVELTY DISCOVERY: ${novelty['tag']}",
+                style: TextStyle(
+                  fontSize: 10, 
+                  fontWeight: FontWeight.bold, 
+                  color: isHigh ? AppColors.rajBlue : Colors.grey.shade600,
+                  letterSpacing: 1.1,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Text(
+            _lastAiResponse!['response_text'] ?? "Analysis complete",
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          ...((novelty['insights'] as List).map((insight) => Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Row(
+              children: [
+                const Icon(Icons.check_circle_outline, size: 12, color: AppColors.rajGreen),
+                const SizedBox(width: 8),
+                Expanded(child: Text(insight, style: const TextStyle(fontSize: 11, color: Colors.grey))),
+              ],
+            ),
+          ))),
+          const SizedBox(height: 8),
+          Text(
+            "Powered by Krishi-Sarathi™ Hybrid NLP v5.0",
+            style: TextStyle(fontSize: 8, fontStyle: FontStyle.italic, color: Colors.grey.shade400),
           ),
         ],
       ),

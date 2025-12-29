@@ -10,9 +10,18 @@ class AppState extends ChangeNotifier {
   String syncStatus = "idle";
   List<Product> products = [];
   Map<String, dynamic>? updateNag;
+  
+  // Hyper-Scale Features
+  String currentLanguage = "hi"; 
+  String aiMode = "HYBRID-SARATHI-V5";
 
   AppState() {
     _init();
+  }
+
+  void setLanguage(String langCode) {
+    currentLanguage = langCode;
+    notifyListeners();
   }
 
   Future<void> _init() async {

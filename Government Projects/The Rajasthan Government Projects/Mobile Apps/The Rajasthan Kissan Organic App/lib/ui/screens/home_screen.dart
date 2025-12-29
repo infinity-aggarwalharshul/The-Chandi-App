@@ -112,6 +112,19 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ),
+        const SizedBox(height: 16),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _buildLanguageSelector(state),
+            Text(
+              ChandiConfig.globalId,
+              style: TextStyle(fontSize: 8, color: Colors.grey.shade400, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        _buildHyperScaleMetrics(),
         const SizedBox(height: 24),
 
         // System Intelligence
@@ -166,11 +179,29 @@ class _HomeScreenState extends State<HomeScreen> {
           onAction: () => state.setView("schemes")),
         const SizedBox(height: 12),
         ...CloudAdapter.getSchemes().take(2).map((s) => _buildSchemeCard(s)),
-        const SizedBox(height: 80), // Padding for bottom nav
+
+        const SizedBox(height: 32),
+        // Legal & IP Footer
+        Center(
+          child: Column(
+            children: [
+              const Text(ChandiConfig.copyright, style: TextStyle(fontSize: 7, color: Colors.grey)),
+              const SizedBox(height: 4),
+              const Text(ChandiConfig.trademark, style: TextStyle(fontSize: 7, color: Colors.grey, fontStyle: FontStyle.italic)),
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(color: Colors.grey.shade100, borderRadius: BorderRadius.circular(4)),
+                child: const Text(ChandiConfig.patent, style: TextStyle(fontSize: 7, fontWeight: FontWeight.bold, color: Colors.grey)),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 100), // Padding for bottom nav
       ],
     );
   }
-
+}
   Widget _buildPill(IconData icon, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -294,6 +325,85 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildLanguageSelector(AppState state) {
+    const langs = {'en': 'English', 'hi': 'हिन्दी', 'mrw': 'मारवाड़ी'};
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.grey.shade100),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: state.currentLanguage,
+          isDense: true,
+          items: langs.entries.map((e) => DropdownMenuItem(
+            value: e.key,
+            child: Text(e.value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+          )).toList(),
+          onChanged: (val) => state.setLanguage(val!),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHyperScaleMetrics() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.rajBlue,
+        borderRadius: BorderRadius.circular(24),
+        image: DecorationImage(
+          image: const NetworkImage("https://www.transparenttextures.com/patterns/cubes.png"),
+          opacity: 0.05,
+          colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.1), BlendMode.srcIn),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.bolt, color: AppColors.rajOrange, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                "HYPER-SCALE PERFORMANCE".toUpperCase(),
+                style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900, letterSpacing: 1.5),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildMetricItem("10T", "SQL Records"),
+              _buildMetricItem("<0.1ms", "V-Index Latency"),
+              _buildMetricItem("RSA", "Vault Security"),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(color: Colors.white24, height: 1),
+          const SizedBox(height: 12),
+          Text(
+            "LaghuBhandar™ Compactor: ACTIVE (92% Dev-Opt)",
+            style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 9, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMetricItem(String val, String label) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(val, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(label, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 9)),
+      ],
     );
   }
 

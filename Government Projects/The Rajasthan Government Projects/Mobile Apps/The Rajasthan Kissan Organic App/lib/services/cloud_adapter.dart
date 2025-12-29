@@ -64,6 +64,7 @@ class CloudAdapter {
       district: item['district'],
       imagePath: item['imagePath'],
       audioPath: item['audioPath'],
+      noveltyTag: item['noveltyTag'],
     );
 
     products.insert(0, newItem);

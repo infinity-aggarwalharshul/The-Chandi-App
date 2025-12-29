@@ -134,13 +134,22 @@ class MandiScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(p.crop, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                    const Chip(
-                      label: Text("Verified", style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold)),
-                      backgroundColor: Color(0x11138808),
-                      labelStyle: TextStyle(color: AppColors.rajGreen),
-                      padding: EdgeInsets.zero,
-                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
+                    if (p.noveltyTag == "PLATINUM_LISTING") 
+                      const Chip(
+                        label: Text("Platinum", style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold)),
+                        backgroundColor: Color(0x22000080),
+                        labelStyle: TextStyle(color: AppColors.rajBlue),
+                        padding: EdgeInsets.zero,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      )
+                    else 
+                      const Chip(
+                        label: Text("Verified", style: TextStyle(fontSize: 8, fontWeight: FontWeight.bold)),
+                        backgroundColor: Color(0x11138808),
+                        labelStyle: TextStyle(color: AppColors.rajGreen),
+                        padding: EdgeInsets.zero,
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
                   ],
                 ),
                 const SizedBox(height: 4),

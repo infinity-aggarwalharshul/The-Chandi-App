@@ -11,6 +11,7 @@ class Product {
   final String? district;
   final String? imagePath;
   final String? audioPath;
+  final String? noveltyTag;
 
   Product({
     required this.id,
@@ -25,6 +26,7 @@ class Product {
     this.district,
     this.imagePath,
     this.audioPath,
+    this.noveltyTag,
   });
 
   Map<String, dynamic> toJson() => {
@@ -40,6 +42,7 @@ class Product {
     'district': district,
     'imagePath': imagePath,
     'audioPath': audioPath,
+    'noveltyTag': noveltyTag,
   };
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -55,5 +58,6 @@ class Product {
     district: json['district'],
     imagePath: json['imagePath'],
     audioPath: json['audioPath'],
+    noveltyTag: json['noveltyTag'],
   );
 }

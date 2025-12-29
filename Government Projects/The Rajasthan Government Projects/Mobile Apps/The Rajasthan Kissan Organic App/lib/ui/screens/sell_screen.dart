@@ -135,6 +135,7 @@ class _SellScreenState extends State<SellScreen> {
       'district': state.user!['district'],
       'imagePath': _imageFile?.path,
       'audioPath': _audioPath,
+      'noveltyTag': _lastAiResponse != null ? _lastAiResponse!['novelty']['tag'] : "STANDARD",
       'nominee': {
         'name': _nomineeNameController.text,
         'relation': _nomineeRelationController.text,

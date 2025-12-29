@@ -17,9 +17,9 @@ The ChitraHarsha Raj Kissan Organic App is a world-class, future-ready mobile so
 ### Key Features
 
 - **Pehchan Dwar**: Secure login integrated with Jan-Aadhaar & SSO protocols.
-- **Krishi Vaani**: Multi-lingual AI Voice assistant for rural accessibility.
-- **Vipanika Mandi**: High-performance E-Mandi capable of handling 10 trillion records via advanced sharding.
-- **MeghKosh Storage**: Offline-first encrypted storage synced with Rajasthan State Data Center simulations.
+- **Krishi Vaani**: Multi-lingual AI Voice assistant and audio evidence recording for rural accessibility.
+- **Vipanika Mandi**: High-performance E-Mandi with multi-modal evidence display (images/audio) and 10 trillion record scale sharding.
+- **MeghKosh Storage**: AES-256 encrypted storage for data, crop images, and audio descriptors.
 - **Chandi Lab**: A glimpse into the future with WebXR crop health inspection and Blockchain traceability.
 
 ---

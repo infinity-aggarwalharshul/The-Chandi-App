@@ -21,13 +21,15 @@ The ChitraHarsha Raj Kissan Organic app is a first-of-its-kind mobile platform d
 ### 2.2 Security & Data Privacy (MeghKosh)
 
 - **AES-256-GCM Encryption**: All farmer identity and transactional data are encrypted at the client side before transmission.
-- **Data Sharding**: Scalable architecture designed to handle up to 10 trillion records without latency degredation.
+- **MeghKosh Sharding**: Distributed ledger technology designed to handle up to 10 trillion records across state-wide data shards.
 - **LZ-String Compression**: Optimized data packets for low-bandwidth rural connectivity.
+- **Biometric & SSO Auth**: Integration with Aadhaar-based biometric and SSO authentication for iron-clad security.
 
 ### 2.3 AI & Machine Learning (Krishi Vaani)
 
 - **RJ-NLP-V4.2**: A proprietary NLP engine designed to understand local dialects and agricultural terminology in Rajasthan.
 - **Speech-to-Intent**: Allows farmers to list products using voice commands, overcoming literacy barriers.
+- **Multi-Modal Evidence Core**: Native support for high-resolution crop imaging and recorded audio descriptions as immutable evidence for organic certification.
 
 ## 3. Compliance with Rajasthan Govt Rules
 

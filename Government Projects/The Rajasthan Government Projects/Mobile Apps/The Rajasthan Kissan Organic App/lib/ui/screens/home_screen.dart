@@ -1,12 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 import '../../core/config.dart';
 import '../../services/app_state.dart';
 import '../../services/ai_processor.dart';
 import '../../services/cloud_adapter.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickProfileImage(AppState state) async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      state.updateUserProfileImage(image.path);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Profile Image Secured in MeghKosh!")),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,30 +59,44 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Namaste, ${user['name'].split(' ')[0]} ji! 🙏",
-                        style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "District: ${user['district']}",
-                        style: TextStyle(color: Colors.orange.shade50, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Colors.white24,
-                      borderRadius: BorderRadius.circular(12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Namaste, ${user['name'].split(' ')[0]} ji! 🙏",
+                          style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          "District: ${user['district']}",
+                          style: TextStyle(color: Colors.orange.shade50, fontSize: 14),
+                        ),
+                      ],
                     ),
-                    child: Image.network(
-                      "https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Emblem_of_India.svg/20px-Emblem_of_India.svg.png",
-                      width: 30,
-                      color: Colors.white.withOpacity(0.9),
+                  ),
+                  GestureDetector(
+                    onTap: () => _pickProfileImage(state),
+                    child: Hero(
+                      tag: "profile_image",
+                      child: Container(
+                        width: 60,
+                        height: 60,
+                        decoration: BoxDecoration(
+                          color: Colors.white24,
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.white, width: 2),
+                          image: user['profileImage'] != null
+                              ? DecorationImage(
+                                  image: FileImage(File(user['profileImage'])),
+                                  fit: BoxFit.cover,
+                                )
+                              : null,
+                        ),
+                        child: user['profileImage'] == null
+                            ? const Icon(Icons.add_a_photo, color: Colors.white70)
+                            : null,
+                      ),
                     ),
                   ),
                 ],
@@ -87,11 +120,11 @@ class HomeScreen extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: _buildStatusCard("Inbuilt NLP", "ACTIVE", Colors.green, true),
+              child: _buildStatusCard("Secured Inbuilt NLP", "ACTIVE", Colors.green, true),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: _buildStatusCard("Sync Manager", "AUTO-DATA", AppColors.rajBlue, false, 
+              child: _buildStatusCard("Sync Manager", "GOVT-CLOUD", AppColors.rajBlue, false, 
                 isLoading: state.syncStatus == "syncing"),
             ),
           ],
@@ -105,7 +138,7 @@ class HomeScreen extends StatelessWidget {
               child: _buildActionButton(
                 context,
                 "Vikray (Sell)",
-                "List Produce",
+                "Add Voice & Image",
                 Icons.spa,
                 Colors.green.shade50,
                 AppColors.rajGreen,

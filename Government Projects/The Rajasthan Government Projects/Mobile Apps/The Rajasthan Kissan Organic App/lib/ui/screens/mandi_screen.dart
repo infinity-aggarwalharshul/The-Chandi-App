@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
 import '../../core/config.dart';
 import '../../services/app_state.dart';
 
@@ -113,8 +114,16 @@ class MandiScreen extends StatelessWidget {
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
               borderRadius: BorderRadius.circular(16),
+              image: p.imagePath != null
+                  ? DecorationImage(
+                      image: FileImage(File(p.imagePath!)),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
-            child: Center(child: Text(emoji, style: const TextStyle(fontSize: 32))),
+            child: p.imagePath == null 
+                ? Center(child: Text(emoji, style: const TextStyle(fontSize: 32)))
+                : null,
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -146,10 +155,17 @@ class MandiScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Icon(Icons.location_on, size: 12, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text("${p.location} • ${p.date}", style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                    Row(
+                      children: [
+                        const Icon(Icons.location_on, size: 12, color: Colors.grey),
+                        const SizedBox(width: 4),
+                        Text("${p.location} • ${p.date}", style: const TextStyle(fontSize: 10, color: Colors.grey)),
+                      ],
+                    ),
+                    if (p.audioPath != null)
+                      const Icon(Icons.volume_up, size: 14, color: AppColors.rajBlue),
                   ],
                 ),
               ],

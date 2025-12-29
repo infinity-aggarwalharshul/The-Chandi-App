@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:signature/signature.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:record/record.dart';
+import 'dart:io';
 import '../../core/config.dart';
 import '../../services/app_state.dart';
 import '../../services/ai_processor.dart';
@@ -30,10 +33,49 @@ class _SellScreenState extends State<SellScreen> {
   bool _isListening = false;
   String _transcript = "";
 
+  final ImagePicker _picker = ImagePicker();
+  XFile? _imageFile;
+  
+  final _audioRecorder = AudioRecorder();
+  bool _isRecording = false;
+  String? _audioPath;
+
   @override
   void initState() {
     super.initState();
     _speech = stt.SpeechToText();
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      setState(() => _imageFile = image);
+    }
+  }
+
+  Future<void> _toggleRecording() async {
+    if (_isRecording) {
+      final path = await _audioRecorder.stop();
+      setState(() {
+        _isRecording = false;
+        _audioPath = path;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Audio evidence saved: ${path?.split('/').last}")),
+      );
+    } else {
+      if (await _audioRecorder.hasPermission()) {
+        const config = RecordConfig();
+        final directory = await Directory.systemTemp.createTemp();
+        final path = '${directory.path}/audio_evidence_${DateTime.now().millisecondsSinceEpoch}.m4a';
+        
+        await _audioRecorder.start(config, path: path);
+        setState(() {
+          _isRecording = true;
+          _audioPath = null;
+        });
+      }
+    }
   }
 
   void _listen() async {
@@ -82,6 +124,8 @@ class _SellScreenState extends State<SellScreen> {
       'location': state.user!['district'],
       'seller': state.user!['name'],
       'district': state.user!['district'],
+      'imagePath': _imageFile?.path,
+      'audioPath': _audioPath,
       'nominee': {
         'name': _nomineeNameController.text,
         'relation': _nomineeRelationController.text,
@@ -147,7 +191,7 @@ class _SellScreenState extends State<SellScreen> {
 
         const SizedBox(height: 24),
         // Document Upload Simulation
-        _buildUploadPlaceholder(),
+        _buildMediaUpload(),
 
         const SizedBox(height: 32),
         SizedBox(
@@ -273,31 +317,87 @@ class _SellScreenState extends State<SellScreen> {
     );
   }
 
-  Widget _buildUploadPlaceholder() {
-    return Container(
-      padding: const EdgeInsets.all(32),
-      decoration: BoxDecoration(
-        color: Colors.grey.shade50.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.grey.shade300, style: BorderStyle.none),
-      ),
-      child: Column(
-        children: const [
-          Icon(Icons.camera_alt, size: 32, color: Colors.grey),
-          SizedBox(height: 8),
-          Text(
-            "Upload Soil Health Card or Organic Certificate",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
+  Widget _buildMediaUpload() {
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: _pickImage,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Colors.grey.shade300, style: BorderStyle.none),
+            ),
+            child: _imageFile != null 
+              ? Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(16),
+                      child: Image.file(File(_imageFile!.path), height: 100, fit: BoxFit.cover),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text("Click to change image", style: TextStyle(fontSize: 10, color: AppColors.rajBlue)),
+                  ],
+                )
+              : Column(
+                  children: const [
+                    Icon(Icons.camera_alt, size: 32, color: Colors.grey),
+                    SizedBox(height: 8),
+                    Text(
+                      "Upload Crop Image (Fasal ki Photo)",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 10, color: Colors.grey, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
           ),
-          SizedBox(height: 8),
-          Chip(
-            label: Text("Secured by ChitraHarsha AES-256", style: TextStyle(fontSize: 8)),
-            backgroundColor: Color(0x11138808),
-            labelStyle: TextStyle(color: AppColors.rajGreen),
+        ),
+        const SizedBox(height: 16),
+        InkWell(
+          onTap: _toggleRecording,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: _isRecording ? Colors.red.shade50 : AppColors.rajBlue.withOpacity(0.05),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: _isRecording ? Colors.red.shade100 : AppColors.rajBlue.withOpacity(0.1)),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  _isRecording ? Icons.stop : Icons.mic,
+                  color: _isRecording ? Colors.red : AppColors.rajBlue,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _isRecording ? "Recording Audio Evidence..." : (_audioPath != null ? "Audio Evidence Attached" : "Record Audio Description"),
+                        style: TextStyle(
+                          fontSize: 12, 
+                          fontWeight: FontWeight.bold,
+                          color: _isRecording ? Colors.red : AppColors.rajBlue,
+                        ),
+                      ),
+                      if (_audioPath != null && !_isRecording)
+                        Text(
+                          "Secured by Rajasthan Govt MeghKosh Encrypter",
+                          style: TextStyle(fontSize: 8, color: Colors.grey.shade500),
+                        ),
+                    ],
+                  ),
+                ),
+                if (_isRecording)
+                  const SizedBox(width: 8, height: 8, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.red)),
+              ],
+            ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

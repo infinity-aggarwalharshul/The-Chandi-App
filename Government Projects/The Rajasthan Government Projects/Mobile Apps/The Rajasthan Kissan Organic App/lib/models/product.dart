@@ -9,6 +9,8 @@ class Product {
   final String traceId;
   final String? seller;
   final String? district;
+  final String? imagePath;
+  final String? audioPath;
 
   Product({
     required this.id,
@@ -21,6 +23,8 @@ class Product {
     required this.traceId,
     this.seller,
     this.district,
+    this.imagePath,
+    this.audioPath,
   });
 
   Map<String, dynamic> toJson() => {
@@ -34,6 +38,8 @@ class Product {
     'traceId': traceId,
     'seller': seller,
     'district': district,
+    'imagePath': imagePath,
+    'audioPath': audioPath,
   };
 
   factory Product.fromJson(Map<String, dynamic> json) => Product(
@@ -47,5 +53,7 @@ class Product {
     traceId: json['traceId'],
     seller: json['seller'],
     district: json['district'],
+    imagePath: json['imagePath'],
+    audioPath: json['audioPath'],
   );
 }

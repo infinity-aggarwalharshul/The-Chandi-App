@@ -54,6 +54,13 @@ class AppState extends ChangeNotifier {
     notifyListeners();
   }
 
+  void updateUserProfileImage(String path) {
+    if (user != null) {
+      user!['profileImage'] = path;
+      notifyListeners();
+    }
+  }
+
   void logout() {
     user = null;
     currentView = "home";

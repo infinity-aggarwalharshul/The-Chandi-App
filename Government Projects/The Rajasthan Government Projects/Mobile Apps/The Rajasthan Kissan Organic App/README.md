@@ -34,9 +34,14 @@ flutter pub get
 flutter run --release
 ```
 
-## 📜 Documentation
+## 📜 Official Government Suite
 
-Full technical and legal documentation is available in the [Government_Documents](./Government_Documents/) folder.
+Full technical and legal documentation is available for official utilization:
+
+- [Official Detailed Project Report (v4.0-PRO)](./Government_Documents/DPR_OFFICIAL_V4_PRO.md)
+- [Government Pitch Deck (Rajasthan-PRO)](./Government_Documents/PITCH_DECK_RAJASTHAN_GOVT.md)
+- [IP Protection Strategy](./Government_Documents/IP_PROTECTION_STRATEGY.md)
+- [Policy Compliance Matrix](./Government_Documents/POLICY_COMPLIANCE_MATRIX.md)
 
 ---
 

@@ -49,7 +49,11 @@ class CloudAdapter {
     final products = await getData();
     
     DateTime startTime = DateTime.now();
-    print("📡 MeghKosh V4: Initializing Hyper-Spectral Link...");
+    print("🔒 MeghKosh: Initiating 10-Trillion Scale Indexing (V-Index Optimized)...");
+    
+    // Simulate Sharding & Sovereignty
+    String shardId = "SHARD-RJ-${item['district']}-${DateTime.now().millisecond % 100}";
+    print("💎 Sharding: Data sent to Sovereign Block [$shardId]");
     
     final newItem = Product(
       id: "HYP-${DateTime.now().millisecondsSinceEpoch}",

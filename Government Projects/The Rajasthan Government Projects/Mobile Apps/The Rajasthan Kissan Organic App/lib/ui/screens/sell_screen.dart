@@ -242,7 +242,7 @@ class _SellScreenState extends State<SellScreen> {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1),
+            color: Colors.white.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(19),
           ),
           child: Row(
@@ -300,9 +300,9 @@ class _SellScreenState extends State<SellScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.rajSand.withOpacity(0.2),
+        color: AppColors.rajSand.withValues(alpha: 0.2),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: AppColors.rajOrange.withOpacity(0.1)),
+        border: Border.all(color: AppColors.rajOrange.withValues(alpha: 0.1)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -337,9 +337,9 @@ class _SellScreenState extends State<SellScreen> {
       margin: const EdgeInsets.only(top: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isHigh ? AppColors.rajBlue.withOpacity(0.05) : Colors.grey.shade50,
+        color: isHigh ? AppColors.rajBlue.withValues(alpha: 0.05) : Colors.grey.shade50,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: isHigh ? AppColors.rajBlue.withOpacity(0.1) : Colors.transparent),
+        border: Border.all(color: isHigh ? AppColors.rajBlue.withValues(alpha: 0.1) : Colors.transparent),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -429,9 +429,9 @@ class _SellScreenState extends State<SellScreen> {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _isRecording ? Colors.red.shade50 : AppColors.rajBlue.withOpacity(0.05),
+              color: _isRecording ? Colors.red.shade50 : AppColors.rajBlue.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: _isRecording ? Colors.red.shade100 : AppColors.rajBlue.withOpacity(0.1)),
+              border: Border.all(color: _isRecording ? Colors.red.shade100 : AppColors.rajBlue.withValues(alpha: 0.1)),
             ),
             child: Row(
               children: [

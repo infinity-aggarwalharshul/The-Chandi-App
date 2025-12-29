@@ -136,7 +136,7 @@ class LabScreen extends StatelessWidget {
             Container(
               width: 48,
               height: 48,
-              decoration: BoxDecoration(color: iconColor.withOpacity(0.1), borderRadius: BorderRadius.circular(16)),
+              decoration: BoxDecoration(color: iconColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16)),
               child: Icon(icon, color: iconColor),
             ),
             const SizedBox(width: 16),

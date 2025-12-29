@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
-                color: AppColors.rajOrange.withOpacity(0.3),
+                color: AppColors.rajOrange.withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -246,7 +246,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
             decoration: BoxDecoration(
-              color: onAction != null ? Colors.transparent : AppColors.rajOrange.withOpacity(0.1),
+              color: onAction != null ? Colors.transparent : AppColors.rajOrange.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -360,7 +360,7 @@ class _HomeScreenState extends State<HomeScreen> {
         image: DecorationImage(
           image: const NetworkImage("https://www.transparenttextures.com/patterns/cubes.png"),
           opacity: 0.05,
-          colorFilter: ColorFilter.mode(Colors.white.withOpacity(0.1), BlendMode.srcIn),
+          colorFilter: ColorFilter.mode(Colors.white.withValues(alpha: 0.1), BlendMode.srcIn),
         ),
       ),
       child: Column(
@@ -390,7 +390,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 12),
           Text(
             "LaghuBhandar™ Compactor: ACTIVE (92% Dev-Opt)",
-            style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 9, fontWeight: FontWeight.bold),
+            style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 9, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -402,7 +402,7 @@ class _HomeScreenState extends State<HomeScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(val, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-        Text(label, style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 9)),
+        Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 9)),
       ],
     );
   }
@@ -412,7 +412,7 @@ class _HomeScreenState extends State<HomeScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.rajSand.withOpacity(0.3),
+        color: AppColors.rajSand.withValues(alpha: 0.3),
         borderRadius: BorderRadius.circular(24),
       ),
       child: Row(

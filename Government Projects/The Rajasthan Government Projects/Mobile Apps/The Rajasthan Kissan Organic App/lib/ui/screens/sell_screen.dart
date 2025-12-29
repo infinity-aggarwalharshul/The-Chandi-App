@@ -60,9 +60,11 @@ class _SellScreenState extends State<SellScreen> {
         _isRecording = false;
         _audioPath = path;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Audio evidence saved: ${path?.split('/').last}")),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Audio evidence saved: ${path?.split('/').last}")),
+        );
+      }
     } else {
       if (await _audioRecorder.hasPermission()) {
         const config = RecordConfig();
@@ -263,7 +265,7 @@ class _SellScreenState extends State<SellScreen> {
                     ),
                     Text(
                       _isListening ? _transcript : "Tap to speak listing details",
-                      style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12),
+                      style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 12),
                     ),
                   ],
                 ),
@@ -395,7 +397,7 @@ class _SellScreenState extends State<SellScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: Colors.grey.shade50.withOpacity(0.5),
+              color: Colors.grey.shade50.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(24),
               border: Border.all(color: Colors.grey.shade300, style: BorderStyle.none),
             ),

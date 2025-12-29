@@ -201,7 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
   }
-}
+
   Widget _buildPill(IconData icon, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),

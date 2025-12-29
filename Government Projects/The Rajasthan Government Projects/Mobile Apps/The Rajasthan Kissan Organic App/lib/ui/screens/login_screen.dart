@@ -37,8 +37,8 @@ class _LoginScreenState extends State<LoginScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
-              AppColors.rajOrange.withOpacity(0.05),
-              AppColors.rajGreen.withOpacity(0.05),
+              AppColors.rajOrange.withValues(alpha: 0.05),
+              AppColors.rajGreen.withValues(alpha: 0.05),
             ],
           ),
         ),
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           border: Border.all(color: AppColors.rajOrange, width: 2),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.rajOrange.withOpacity(0.2),
+                              color: AppColors.rajOrange.withValues(alpha: 0.2),
                               blurRadius: 10,
                             ),
                           ],
@@ -140,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               borderRadius: BorderRadius.circular(16),
                             ),
                             elevation: 8,
-                            shadowColor: AppColors.rajBlue.withOpacity(0.4),
+                            shadowColor: AppColors.rajBlue.withValues(alpha: 0.4),
                           ),
                           child: _isLoading
                               ? const CircularProgressIndicator(color: Colors.white)

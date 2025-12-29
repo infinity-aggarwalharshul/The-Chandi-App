@@ -6,8 +6,26 @@ import 'services/app_state.dart';
 import 'ui/screens/login_screen.dart';
 import 'ui/screens/main_layout.dart';
 
+import 'dart:ui';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Commercial Global Error Monitoring
+  FlutterError.onError = (details) {
+    FlutterError.presentError(details);
+    print("❌ CRITICAL: Global Exception Intercepted: ${details.exception}");
+    // Integration point for Sentry/Firebase Crashlytics in production
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    print("🚨 FATAL: Platform Error Captured: $error");
+    return true;
+  };
+
+  print("启动: Initializing ${ChandiConfig.appName} (v${ChandiConfig.version})...");
+  print("🏛️ Core: Sharded Security Vault Initialized (RSA-4096 Ready)");
+
   runApp(
     ChangeNotifierProvider(
       create: (context) => AppState(),

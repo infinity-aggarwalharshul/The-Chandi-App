@@ -16,7 +16,7 @@ class LabScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(30),
             boxShadow: [
               BoxShadow(
-                color: AppColors.rajBlue.withOpacity(0.3),
+                color: AppColors.rajBlue.withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),

@@ -8,7 +8,7 @@
  * @version 2.0.0
  */
 
-const CACHE_VERSION = "nidaan-v2.0.0";
+const CACHE_VERSION = "nidaan-x-v3.0.0";
 const CACHE_NAME = `${CACHE_VERSION}-static`;
 const DATA_CACHE_NAME = `${CACHE_VERSION}-data`;
 
@@ -17,9 +17,13 @@ const STATIC_ASSETS = [
   "/",
   "/index.html",
   "/manifest.json",
+  "/css/style.css",
+  "/css/nidaan-x.css",
   "/js/encryption.js",
   "/js/voice-handler.js",
   "/js/image-handler.js",
+  "/js/ai-brain.js",
+  "/js/quantum-db.js",
   // Firebase SDKs (cached from CDN)
   "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js",
   "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js",

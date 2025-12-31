@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /private/
+Disallow: /artifacts/
+
+Sitemap: https://nidaan-rajasthan.web.app/sitemap.xml

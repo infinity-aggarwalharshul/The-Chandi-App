@@ -16,6 +16,46 @@
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/nidaan-x.css" />
+    <style>
+      /* Premium Splash Screen */
+      #app-splash {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #0a0a12;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #00f3ff;
+        transition: opacity 0.8s ease-out;
+      }
+      .splash-logo {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
+      }
+      .splash-loader {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(0, 243, 255, 0.3);
+        border-top: 3px solid #00f3ff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
     <meta name="theme-color" content="#003366" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta
@@ -563,6 +603,15 @@
     <script src="js/quantum-db.js" defer></script>
   </head>
   <body>
+    <!-- SPLASH SCREEN -->
+    <div id="app-splash">
+      <div class="splash-logo">NIDAAN X</div>
+      <div class="splash-loader"></div>
+      <div style="margin-top: 15px; font-size: 0.8rem; letter-spacing: 2px">
+        INITIALIZING DIVYA-DRISHTI AI...
+      </div>
+    </div>
+
     <!-- AUTHENTICATION (VAJRA-KAVACH) -->
     <div id="auth-overlay">
       <div class="auth-card">
@@ -1151,489 +1200,504 @@
 
     <!-- APP LOGIC -->
     <script type="module">
-      // Firebase Setup
-      const {
-        initializeApp,
-        getAuth,
-        signInAnonymously,
-        onAuthStateChanged,
-        getFirestore,
-        collection,
-        addDoc,
-        query,
-        orderBy,
-        limit,
-        onSnapshot,
-        serverTimestamp,
-        getStorage,
-        ref,
-        uploadBytes,
-        getDownloadURL,
-      } = window.firebaseModules;
+        // Firebase Setup
+        const {
+          initializeApp,
+          getAuth,
+          signInAnonymously,
+          onAuthStateChanged,
+          getFirestore,
+          collection,
+          addDoc,
+          query,
+          orderBy,
+          limit,
+          onSnapshot,
+          serverTimestamp,
+          getStorage,
+          ref,
+          uploadBytes,
+          getDownloadURL,
+        } = window.firebaseModules;
 
-      const firebaseConfig = JSON.parse(
-        new URLSearchParams(window.location.search).get("__firebase_config") ||
-          "{}"
-      );
-      const appId = typeof __app_id !== "undefined" ? __app_id : "default-app";
+        const firebaseConfig = JSON.parse(
+          new URLSearchParams(window.location.search).get("__firebase_config") ||
+            "{}"
+        );
+        const appId = typeof __app_id !== "undefined" ? __app_id : "default-app";
 
-      // Initialize Firebase
-      let db, auth, user, storage;
-      try {
-        const app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-        storage = getStorage(app);
-        signInAnonymously(auth).catch(console.error);
-      } catch (e) {
-        console.log("Firebase Init Placeholder (Run in Canvas environment)");
-      }
+        // Initialize Firebase
+        let db, auth, user, storage;
+        try {
+          const app = initializeApp(firebaseConfig);
+          auth = getAuth(app);
+          db = getFirestore(app);
+          storage = getStorage(app);
+          signInAnonymously(auth).catch(console.error);
+        } catch (e) {
+          console.log("Firebase Init Placeholder (Run in Canvas environment)");
+        }
 
-      // Register Service Worker for PWA
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker
-            .register("/service-worker.js")
-            .then((registration) => {
-              console.log("✅ ServiceWorker registered:", registration.scope);
+        // Register Service Worker for PWA
+        if ("serviceWorker" in navigator) {
+          window.addEventListener("load", () => {
+            navigator.serviceWorker
+              .register("/service-worker.js")
+              .then((registration) => {
+                console.log("✅ ServiceWorker registered:", registration.scope);
 
-              // Check for updates
-              registration.addEventListener("updatefound", () => {
-                const newWorker = registration.installing;
-                newWorker.addEventListener("statechange", () => {
-                  if (
-                    newWorker.state === "installed" &&
-                    navigator.serviceWorker.controller
-                  ) {
-                    console.log("🔄 New version available! Reload to update.");
-                  }
+                // Check for updates
+                registration.addEventListener("updatefound", () => {
+                  const newWorker = registration.installing;
+                  newWorker.addEventListener("statechange", () => {
+                    if (
+                      newWorker.state === "installed" &&
+                      navigator.serviceWorker.controller
+                    ) {
+                      console.log("🔄 New version available! Reload to update.");
+                    }
+                  });
                 });
-              });
-            })
-            .catch((error) =>
-              console.log("❌ ServiceWorker registration failed:", error)
-            );
-        });
-      }
-
-      // --- CORE APPLICATION LOGIC ---
-      window.app = {
-        state: {
-          isLoggedIn: false,
-          isHindi: false,
-          offlineQueue: JSON.parse(
-            localStorage.getItem("nidaan_queue") || "[]"
-          ),
-          currentUser: "Guest",
-          mediaStream: null,
-          currentAudio: null, // Current audio attachment
-          currentImages: [], // Current image attachments
-        },
-
-        // AUTH
-        toggleAuthBtn: function () {
-          document.getElementById("login-btn").disabled =
-            !document.getElementById("consent-check").checked;
-        },
-
-        login: function () {
-          const id = document.getElementById("auth-id").value || "RJ-USER-001";
-          document.getElementById("auth-overlay").style.display = "none";
-          this.state.isLoggedIn = true;
-          this.state.currentUser = id;
-          this.refreshQueueUI();
-          this.initCloudListener(); // Start listening to Firestore
-
-          // Initialize image upload UI
-          if (window.ImageHandler) {
-            window.ImageHandler.initialize("image-upload-container");
-          }
-
-          // Initialize Nidaan X Engines
-          if (window.AIBrain) window.AIBrain.initialize();
-          if (window.QuantumDB) window.QuantumDB.connect();
-        },
-
-        // Method to attach audio for saving
-        attachAudio: function (audioData) {
-          this.state.currentAudio = audioData;
-          console.log("Audio attached to current record");
-        },
-
-        // NAVIGATION
-        nav: function (tab) {
-          document
-            .querySelectorAll(".nav-link")
-            .forEach((el) => el.classList.remove("active"));
-          document.getElementById(`tab-${tab}`).classList.add("active");
-          document
-            .querySelectorAll(".grid-system")
-            .forEach((el) => el.classList.add("hidden"));
-          document.getElementById(`view-${tab}`).classList.remove("hidden");
-
-          // Stop camera if leaving field view
-          if (tab !== "field") this.stopCamera();
-        },
-
-        // LANGUAGE TOGGLE
-        toggleLang: function () {
-          this.state.isHindi = !this.state.isHindi;
-          const set = this.state.isHindi;
-
-          document.getElementById("tab-dash").innerText = set
-            ? "राज-दर्पण (Dashboard)"
-            : "Raj-Darpan (Dashboard)";
-          document.getElementById("tab-field").innerText = set
-            ? "ग्रामीण-सेवक (Field)"
-            : "Gramin-Sevak (Field)";
-          document.getElementById("tab-cloud").innerText = set
-            ? "मेघ-कोष (Cloud)"
-            : "Megh-Kosh (Cloud)";
-          document.getElementById("prediction-title").innerText = set
-            ? "वायरल प्रकोप संभावना: मध्यम"
-            : "Viral Outbreak Probability: Moderate";
-        },
-
-        // CAMERA (NETRA LENS)
-        startCamera: async function () {
-          const video = document.getElementById("camera-feed");
-          const startScreen = document.getElementById("lens-start-screen");
-          const scanLine = document.getElementById("scan-line");
-
-          try {
-            this.state.mediaStream = await navigator.mediaDevices.getUserMedia({
-              video: { facingMode: "environment" },
-            });
-            video.srcObject = this.state.mediaStream;
-            video.style.display = "block";
-            startScreen.style.display = "none";
-            scanLine.style.display = "block";
-
-            // Simulate AI Analysis after 4 seconds
-            setTimeout(() => {
-              document.getElementById("lens-result").classList.remove("hidden");
-              scanLine.style.display = "none";
-            }, 4000);
-          } catch (err) {
-            alert(
-              "Camera Permission Denied or Not Available. Using Manual Mode."
-            );
-          }
-        },
-
-        stopCamera: function () {
-          if (this.state.mediaStream) {
-            this.state.mediaStream.getTracks().forEach((track) => track.stop());
-            this.state.mediaStream = null;
-          }
-          document.getElementById("camera-feed").style.display = "none";
-        },
-
-        resetLens: function () {
-          document.getElementById("lens-result").classList.add("hidden");
-          document.getElementById("lens-start-screen").style.display = "block";
-          document.getElementById("scan-line").style.display = "none";
-        },
-
-        // DATA HANDLING (LOCAL & CLOUD)
-        // DATA HANDLING (LOCAL & CLOUD)
-        saveReport: async function (e) {
-          e.preventDefault();
-          const symptom = document.getElementById("symptom-select").value;
-          let patientId = document.getElementById("patient-id-input").value;
-          let notes = document.getElementById("voice-transcript").value;
-
-          // Get attachments
-          const images = window.ImageHandler
-            ? window.ImageHandler.getImages()
-            : [];
-          const audio = this.state.currentAudio;
-
-          // Encrypt Sensitive Data
-          let isEncrypted = false;
-          if (window.EncryptionService && this.state.currentUser !== "Guest") {
-            try {
-              // Encrypt fields
-              patientId = await window.EncryptionService.encrypt(
-                patientId,
-                this.state.currentUser
+              })
+              .catch((error) =>
+                console.log("❌ ServiceWorker registration failed:", error)
               );
-              if (notes) {
-                notes = await window.EncryptionService.encrypt(
-                  notes,
+          });
+        }
+
+        // --- CORE APPLICATION LOGIC ---
+        window.app = {
+          state: {
+            isLoggedIn: false,
+            isHindi: false,
+            offlineQueue: JSON.parse(
+              localStorage.getItem("nidaan_queue") || "[]"
+            ),
+            currentUser: "Guest",
+            mediaStream: null,
+            currentAudio: null, // Current audio attachment
+            currentImages: [], // Current image attachments
+          },
+
+          // AUTH
+          toggleAuthBtn: function () {
+            document.getElementById("login-btn").disabled =
+              !document.getElementById("consent-check").checked;
+          },
+
+          login: function () {
+            const id = document.getElementById("auth-id").value || "RJ-USER-001";
+            document.getElementById("auth-overlay").style.display = "none";
+            this.state.isLoggedIn = true;
+            this.state.currentUser = id;
+            this.refreshQueueUI();
+            this.initCloudListener(); // Start listening to Firestore
+
+            // Initialize image upload UI
+            if (window.ImageHandler) {
+              window.ImageHandler.initialize("image-upload-container");
+            }
+
+            // Initialize Nidaan X Engines
+            if (window.AIBrain) window.AIBrain.initialize();
+            if (window.QuantumDB) window.QuantumDB.connect();
+          },
+
+          // Method to attach audio for saving
+          attachAudio: function (audioData) {
+            this.state.currentAudio = audioData;
+            console.log("Audio attached to current record");
+          },
+
+          // NAVIGATION
+          nav: function (tab) {
+            document
+              .querySelectorAll(".nav-link")
+              .forEach((el) => el.classList.remove("active"));
+            document.getElementById(`tab-${tab}`).classList.add("active");
+            document
+              .querySelectorAll(".grid-system")
+              .forEach((el) => el.classList.add("hidden"));
+            document.getElementById(`view-${tab}`).classList.remove("hidden");
+
+            // Stop camera if leaving field view
+            if (tab !== "field") this.stopCamera();
+          },
+
+          // LANGUAGE TOGGLE
+          toggleLang: function () {
+            this.state.isHindi = !this.state.isHindi;
+            const set = this.state.isHindi;
+
+            document.getElementById("tab-dash").innerText = set
+              ? "राज-दर्पण (Dashboard)"
+              : "Raj-Darpan (Dashboard)";
+            document.getElementById("tab-field").innerText = set
+              ? "ग्रामीण-सेवक (Field)"
+              : "Gramin-Sevak (Field)";
+            document.getElementById("tab-cloud").innerText = set
+              ? "मेघ-कोष (Cloud)"
+              : "Megh-Kosh (Cloud)";
+            document.getElementById("prediction-title").innerText = set
+              ? "वायरल प्रकोप संभावना: मध्यम"
+              : "Viral Outbreak Probability: Moderate";
+          },
+
+          // CAMERA (NETRA LENS)
+          startCamera: async function () {
+            const video = document.getElementById("camera-feed");
+            const startScreen = document.getElementById("lens-start-screen");
+            const scanLine = document.getElementById("scan-line");
+
+            try {
+              this.state.mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: { facingMode: "environment" },
+              });
+              video.srcObject = this.state.mediaStream;
+              video.style.display = "block";
+              startScreen.style.display = "none";
+              scanLine.style.display = "block";
+
+              // Simulate AI Analysis after 4 seconds
+              setTimeout(() => {
+                document.getElementById("lens-result").classList.remove("hidden");
+                scanLine.style.display = "none";
+              }, 4000);
+            } catch (err) {
+              alert(
+                "Camera Permission Denied or Not Available. Using Manual Mode."
+              );
+            }
+          },
+
+          stopCamera: function () {
+            if (this.state.mediaStream) {
+              this.state.mediaStream.getTracks().forEach((track) => track.stop());
+              this.state.mediaStream = null;
+            }
+            document.getElementById("camera-feed").style.display = "none";
+          },
+
+          resetLens: function () {
+            document.getElementById("lens-result").classList.add("hidden");
+            document.getElementById("lens-start-screen").style.display = "block";
+            document.getElementById("scan-line").style.display = "none";
+          },
+
+          // DATA HANDLING (LOCAL & CLOUD)
+          // DATA HANDLING (LOCAL & CLOUD)
+          saveReport: async function (e) {
+            e.preventDefault();
+            const symptom = document.getElementById("symptom-select").value;
+            let patientId = document.getElementById("patient-id-input").value;
+            let notes = document.getElementById("voice-transcript").value;
+
+            // Get attachments
+            const images = window.ImageHandler
+              ? window.ImageHandler.getImages()
+              : [];
+            const audio = this.state.currentAudio;
+
+            // Encrypt Sensitive Data
+            let isEncrypted = false;
+            if (window.EncryptionService && this.state.currentUser !== "Guest") {
+              try {
+                // Encrypt fields
+                patientId = await window.EncryptionService.encrypt(
+                  patientId,
                   this.state.currentUser
                 );
-              }
-              isEncrypted = true;
-            } catch (err) {
-              console.error("Encryption failed:", err);
-            }
-          }
-
-          // Run AI Diagnosis (Divya-Drishti 3.0)
-          let aiResult = null;
-          if (window.AIBrain && window.AIBrain.isReady) {
-            aiResult = window.AIBrain.diagnose({
-              symptoms: [symptom], // simple extraction
-              notes: notes,
-              symptomCategory: symptom,
-            });
-
-            // Show Dashboard
-            document.getElementById("ai-dashboard").style.display = "block";
-            document.getElementById("ai-risk-level").innerText =
-              aiResult.riskLevel;
-            document.getElementById("ai-confidence").innerText =
-              aiResult.confidence;
-            document.getElementById(
-              "ai-version"
-            ).innerText = `v${aiResult.moduleVersion}`;
-            document.getElementById("ai-suggestion").innerHTML = `
-                <strong>AI Insight:</strong> Possible ${aiResult.suggestedDiagnosis}.
-                <br><small>Recommendation: Isolate if Risk > MODERATE.</small>
-            `;
-          }
-
-          const record = {
-            id: Date.now(),
-            symptom: symptom,
-            patientId: patientId, // Encrypted or plain
-            notes: notes, // Encrypted or plain
-            isEncrypted: isEncrypted,
-            user: this.state.currentUser,
-            timestamp: new Date().toISOString(),
-            images: images, // Contains blob or encrypted data
-            audio: audio, // Contains blob or encrypted data
-            userAgent: navigator.userAgent,
-            aiAnalysis: aiResult, // Store the AI prediction
-            dbEngine: "QuantumDB-v1",
-          };
-
-          // Hybrid Storage: Save to Local Queue AND QuantumDB (Simulated 10T Store)
-          this.state.offlineQueue.push(record);
-          localStorage.setItem(
-            "nidaan_queue",
-            JSON.stringify(this.state.offlineQueue)
-          );
-
-          if (window.QuantumDB) {
-            window.QuantumDB.insert(record).then((res) =>
-              console.log("⚡ Stored in QuantumDB Shard:", res)
-            );
-          }
-
-          // Reset UI
-          this.refreshQueueUI();
-          e.target.reset();
-          if (window.ImageHandler) window.ImageHandler.clearImages();
-          if (window.VoiceHandler) window.VoiceHandler.discardAudio();
-          this.state.currentAudio = null;
-
-          alert("✅ Saved to Sanchay (Local Vault) & QuantumDB.");
-        },
-
-        refreshQueueUI: function () {
-          const list = document.getElementById("queue-list");
-          const count = this.state.offlineQueue.length;
-          list.innerHTML =
-            count > 0
-              ? `<strong>${count}</strong> Records pending upload.`
-              : "No pending records.";
-        },
-
-        // FIRESTORE SYNC WITH STORAGE
-        syncToCloud: async function () {
-          if (this.state.offlineQueue.length === 0)
-            return alert("Nothing to sync.");
-          if (!db) return alert("Cloud Database not initialized.");
-
-          // Show loading state
-          const btn = document.querySelector(
-            'button[onclick="window.app.syncToCloud()"]'
-          );
-          const originalText = btn.innerText;
-          btn.innerText = "⏳ Syncing...";
-          btn.disabled = true;
-
-          const batch = [...this.state.offlineQueue]; // Copy array
-          let successCount = 0;
-
-          const { ref, uploadBytes, getDownloadURL } = window.firebaseModules;
-
-          for (let i = 0; i < batch.length; i++) {
-            let rec = batch[i];
-
-            try {
-              // 1. Upload Images
-              let imageUrls = [];
-              if (
-                rec.images &&
-                rec.images.length > 0 &&
-                window.firebaseModules.getStorage
-              ) {
-                const storage = window.firebaseModules.getStorage();
-
-                for (let img of rec.images) {
-                  // Determine what to upload (blob or encrypted json blob)
-                  let uploadData = img.data.data || img.data.blob;
-                  let contentType = img.data.encrypted
-                    ? "application/json"
-                    : img.type;
-
-                  // If it's encrypted data object, convert to blob
-                  if (img.data.encrypted) {
-                    uploadData = new Blob([JSON.stringify(img.data.data)], {
-                      type: "application/json",
-                    });
-                  } else if (!uploadData && img.preview) {
-                    // Fallback if blob lost in serialization (simplification)
-                    uploadData = await (await fetch(img.preview)).blob();
-                  }
-
-                  const storageRef = ref(
-                    storage,
-                    `artifacts/${appId}/images/${rec.id}_${img.name}.json`
+                if (notes) {
+                  notes = await window.EncryptionService.encrypt(
+                    notes,
+                    this.state.currentUser
                   );
-                  await uploadBytes(storageRef, uploadData);
-                  const url = await getDownloadURL(storageRef);
-                  imageUrls.push({
-                    url: url,
-                    name: img.name,
-                    encrypted: img.data.encrypted,
-                  });
                 }
+                isEncrypted = true;
+              } catch (err) {
+                console.error("Encryption failed:", err);
               }
-
-              // 2. Upload Audio
-              let audioUrl = null;
-              if (rec.audio && window.firebaseModules.getStorage) {
-                const storage = window.firebaseModules.getStorage();
-
-                let uploadData = rec.audio.ciphertext
-                  ? new Blob([JSON.stringify(rec.audio)], {
-                      type: "application/json",
-                    })
-                  : rec.audio; // Assuming plain blob if not encrypted
-
-                const storageRef = ref(
-                  storage,
-                  `artifacts/${appId}/audio/${rec.id}_audio.json`
-                );
-                await uploadBytes(storageRef, uploadData);
-                audioUrl = await getDownloadURL(storageRef);
-              }
-
-              // 3. Save Metadata to Firestore
-              // Remove large blobs from record before saving
-              const finalRecord = { ...rec };
-              delete finalRecord.images;
-              delete finalRecord.audio;
-
-              finalRecord.attachments = {
-                images: imageUrls,
-                audio: audioUrl,
-              };
-
-              finalRecord.syncedAt = serverTimestamp();
-
-              await addDoc(
-                collection(
-                  db,
-                  "artifacts",
-                  appId,
-                  "public",
-                  "data",
-                  "nidaan_records"
-                ),
-                finalRecord
-              );
-
-              successCount++;
-            } catch (err) {
-              console.error("Sync failed for record " + rec.id, err);
             }
-          }
 
-          // Cleanup
-          if (successCount === batch.length) {
-            this.state.offlineQueue = [];
-            localStorage.setItem("nidaan_queue", "[]");
-            alert(
-              `✅ Successfully synced ${successCount} records to Megh-Kosh.`
-            );
-          } else {
-            // Keep failed records (simplified logic: just clear all for demo, in prod meaningful queue mgmt needed)
-            this.state.offlineQueue = this.state.offlineQueue.filter(
-              (_, idx) => idx >= successCount
-            );
+            // Run AI Diagnosis (Divya-Drishti 3.0)
+            let aiResult = null;
+            if (window.AIBrain && window.AIBrain.isReady) {
+              aiResult = window.AIBrain.diagnose({
+                symptoms: [symptom], // simple extraction
+                notes: notes,
+                symptomCategory: symptom,
+              });
+
+              // Show Dashboard
+              document.getElementById("ai-dashboard").style.display = "block";
+              document.getElementById("ai-risk-level").innerText =
+                aiResult.riskLevel;
+              document.getElementById("ai-confidence").innerText =
+                aiResult.confidence;
+              document.getElementById(
+                "ai-version"
+              ).innerText = `v${aiResult.moduleVersion}`;
+              document.getElementById("ai-suggestion").innerHTML = `
+                  <strong>AI Insight:</strong> Possible ${aiResult.suggestedDiagnosis}.
+                  <br><small>Recommendation: Isolate if Risk > MODERATE.</small>
+              `;
+            }
+
+            const record = {
+              id: Date.now(),
+              symptom: symptom,
+              patientId: patientId, // Encrypted or plain
+              notes: notes, // Encrypted or plain
+              isEncrypted: isEncrypted,
+              user: this.state.currentUser,
+              timestamp: new Date().toISOString(),
+              images: images, // Contains blob or encrypted data
+              audio: audio, // Contains blob or encrypted data
+              userAgent: navigator.userAgent,
+              aiAnalysis: aiResult, // Store the AI prediction
+              dbEngine: "QuantumDB-v1",
+            };
+
+            // Hybrid Storage: Save to Local Queue AND QuantumDB (Simulated 10T Store)
+            this.state.offlineQueue.push(record);
             localStorage.setItem(
               "nidaan_queue",
               JSON.stringify(this.state.offlineQueue)
             );
-            alert(`⚠️ Synced ${successCount}/${batch.length} records.`);
-          }
 
-          this.refreshQueueUI();
-          btn.innerText = originalText;
-          btn.disabled = false;
-        },
+            if (window.QuantumDB) {
+              window.QuantumDB.insert(record).then((res) =>
+                console.log("⚡ Stored in QuantumDB Shard:", res)
+              );
+            }
 
-        // REAL-TIME LISTENER
-        initCloudListener: function () {
-          if (!db) return;
+            // Reset UI
+            this.refreshQueueUI();
+            e.target.reset();
+            if (window.ImageHandler) window.ImageHandler.clearImages();
+            if (window.VoiceHandler) window.VoiceHandler.discardAudio();
+            this.state.currentAudio = null;
 
-          const q = query(
-            collection(
-              db,
-              "artifacts",
-              appId,
-              "public",
-              "data",
-              "nidaan_records"
-            ),
-            orderBy("timestamp", "desc"),
-            limit(10)
-          );
+            alert("✅ Saved to Sanchay (Local Vault) & QuantumDB.");
+          },
 
-          onSnapshot(q, (snapshot) => {
-            const tbody = document.getElementById("cloud-table-body");
-            tbody.innerHTML = "";
-            snapshot.forEach((doc) => {
-              const data = doc.data();
+          refreshQueueUI: function () {
+            const list = document.getElementById("queue-list");
+            const count = this.state.offlineQueue.length;
+            list.innerHTML =
+              count > 0
+                ? `<strong>${count}</strong> Records pending upload.`
+                : "No pending records.";
+          },
 
-              // Formatting
-              const hasAudio = data.attachments?.audio ? "🎙️" : "";
-              const imgCount = data.attachments?.images?.length || 0;
-              const hasImages = imgCount > 0 ? `📷(${imgCount})` : "";
-              const locked = data.isEncrypted ? "🔒" : "";
+          // FIRESTORE SYNC WITH STORAGE
+          syncToCloud: async function () {
+            if (this.state.offlineQueue.length === 0)
+              return alert("Nothing to sync.");
+            if (!db) return alert("Cloud Database not initialized.");
 
-              const row = `<tr>
-                            <td style="padding:12px; border-bottom:1px solid #eee;">
-                                ${new Date(data.timestamp).toLocaleTimeString()}
-                            </td>
-                            <td style="padding:12px; border-bottom:1px solid #eee;">
-                                ${data.symptom} ${locked}
-                            </td>
-                            <td style="padding:12px; border-bottom:1px solid #eee;">
-                                ${data.user}
-                            </td>
-                            <td style="padding:12px; border-bottom:1px solid #eee; color:var(--status-safe);">
-                                ✔ Synced ${hasAudio} ${hasImages}
-                            </td>
-                        </tr>`;
-              tbody.innerHTML += row;
+            // Show loading state
+            const btn = document.querySelector(
+              'button[onclick="window.app.syncToCloud()"]'
+            );
+            const originalText = btn.innerText;
+            btn.innerText = "⏳ Syncing...";
+            btn.disabled = true;
+
+            const batch = [...this.state.offlineQueue]; // Copy array
+            let successCount = 0;
+
+            const { ref, uploadBytes, getDownloadURL } = window.firebaseModules;
+
+            for (let i = 0; i < batch.length; i++) {
+              let rec = batch[i];
+
+              try {
+                // 1. Upload Images
+                let imageUrls = [];
+                if (
+                  rec.images &&
+                  rec.images.length > 0 &&
+                  window.firebaseModules.getStorage
+                ) {
+                  const storage = window.firebaseModules.getStorage();
+
+                  for (let img of rec.images) {
+                    // Determine what to upload (blob or encrypted json blob)
+                    let uploadData = img.data.data || img.data.blob;
+                    let contentType = img.data.encrypted
+                      ? "application/json"
+                      : img.type;
+
+                    // If it's encrypted data object, convert to blob
+                    if (img.data.encrypted) {
+                      uploadData = new Blob([JSON.stringify(img.data.data)], {
+                        type: "application/json",
+                      });
+                    } else if (!uploadData && img.preview) {
+                      // Fallback if blob lost in serialization (simplification)
+                      uploadData = await (await fetch(img.preview)).blob();
+                    }
+
+                    const storageRef = ref(
+                      storage,
+                      `artifacts/${appId}/images/${rec.id}_${img.name}.json`
+                    );
+                    await uploadBytes(storageRef, uploadData);
+                    const url = await getDownloadURL(storageRef);
+                    imageUrls.push({
+                      url: url,
+                      name: img.name,
+                      encrypted: img.data.encrypted,
+                    });
+                  }
+                }
+
+                // 2. Upload Audio
+                let audioUrl = null;
+                if (rec.audio && window.firebaseModules.getStorage) {
+                  const storage = window.firebaseModules.getStorage();
+
+                  let uploadData = rec.audio.ciphertext
+                    ? new Blob([JSON.stringify(rec.audio)], {
+                        type: "application/json",
+                      })
+                    : rec.audio; // Assuming plain blob if not encrypted
+
+                  const storageRef = ref(
+                    storage,
+                    `artifacts/${appId}/audio/${rec.id}_audio.json`
+                  );
+                  await uploadBytes(storageRef, uploadData);
+                  audioUrl = await getDownloadURL(storageRef);
+                }
+
+                // 3. Save Metadata to Firestore
+                // Remove large blobs from record before saving
+                const finalRecord = { ...rec };
+                delete finalRecord.images;
+                delete finalRecord.audio;
+
+                finalRecord.attachments = {
+                  images: imageUrls,
+                  audio: audioUrl,
+                };
+
+                finalRecord.syncedAt = serverTimestamp();
+
+                await addDoc(
+                  collection(
+                    db,
+                    "artifacts",
+                    appId,
+                    "public",
+                    "data",
+                    "nidaan_records"
+                  ),
+                  finalRecord
+                );
+
+                successCount++;
+              } catch (err) {
+                console.error("Sync failed for record " + rec.id, err);
+              }
+            }
+
+            // Cleanup
+            if (successCount === batch.length) {
+              this.state.offlineQueue = [];
+              localStorage.setItem("nidaan_queue", "[]");
+              alert(
+                `✅ Successfully synced ${successCount} records to Megh-Kosh.`
+              );
+            } else {
+              // Keep failed records (simplified logic: just clear all for demo, in prod meaningful queue mgmt needed)
+              this.state.offlineQueue = this.state.offlineQueue.filter(
+                (_, idx) => idx >= successCount
+              );
+              localStorage.setItem(
+                "nidaan_queue",
+                JSON.stringify(this.state.offlineQueue)
+              );
+              alert(`⚠️ Synced ${successCount}/${batch.length} records.`);
+            }
+
+            this.refreshQueueUI();
+            btn.innerText = originalText;
+            btn.disabled = false;
+          },
+
+          // REAL-TIME LISTENER
+          initCloudListener: function () {
+            if (!db) return;
+
+            const q = query(
+              collection(
+                db,
+                "artifacts",
+                appId,
+                "public",
+                "data",
+                "nidaan_records"
+              ),
+              orderBy("timestamp", "desc"),
+              limit(10)
+            );
+
+            onSnapshot(q, (snapshot) => {
+              const tbody = document.getElementById("cloud-table-body");
+              tbody.innerHTML = "";
+              snapshot.forEach((doc) => {
+                const data = doc.data();
+
+                // Formatting
+                const hasAudio = data.attachments?.audio ? "🎙️" : "";
+                const imgCount = data.attachments?.images?.length || 0;
+                const hasImages = imgCount > 0 ? `📷(${imgCount})` : "";
+                const locked = data.isEncrypted ? "🔒" : "";
+
+                const row = `<tr>
+                              <td style="padding:12px; border-bottom:1px solid #eee;">
+                                  ${new Date(data.timestamp).toLocaleTimeString()}
+                              </td>
+                              <td style="padding:12px; border-bottom:1px solid #eee;">
+                                  ${data.symptom} ${locked}
+                              </td>
+                              <td style="padding:12px; border-bottom:1px solid #eee;">
+                                  ${data.user}
+                              </td>
+                              <td style="padding:12px; border-bottom:1px solid #eee; color:var(--status-safe);">
+                                  ✔ Synced ${hasAudio} ${hasImages}
+                              </td>
+                          </tr>`;
+                tbody.innerHTML += row;
+              });
             });
-          });
-        },
+          },
 
-        // Dummy AI update for dashboard
-        updateAI: function (val) {
-          // ...existing update logic...
-        },
-      };
+          // Dummy AI update for dashboard
+          updateAI: function (val) {
+            // ...existing update logic...
+          },
+        };
 
-      // Initial load
-      window.app.refreshQueueUI();
+      <script>
+        // Remove splash screen when loaded
+        window.addEventListener('load', () => {
+          setTimeout(() => {
+              const splash = document.getElementById('app-splash');
+              splash.style.opacity = '0';
+              setTimeout(() => splash.remove(), 800);
+          }, 1500); // Artificial delay to show off Branding
+        });
+
+        // Update System Status
+        setTimeout(() => {
+          if(window.app && window.app.state) {
+               // Status checks simulated for visual feedback
+               // Real checks happen in the modules
+          }
+        }, 2000);
     </script>
     <!-- SYSTEM HEALTH MONITOR (Dynamic) -->
     <div class="system-status-bar">

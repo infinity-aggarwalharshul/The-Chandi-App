@@ -90,39 +90,26 @@ class AIBrain {
           ).length;
         }
 
-        // Return top match
-        return Object.entries(matches).sort((a, b) => b[1] - a[1])[0][0];
-      },
-    };
-  }
-
-  /**
-   * Runs a full diagnostic scan on patient data.
-   * @param {Object} patientData
-   */
-  diagnose(patientData) {
-    if (!this.isReady) return { error: "AI Warming Up..." };
-
-    const riskScore = this.models.riskPredictor.predict({
-      temperature: patientData.vitals?.temp || 37,
-      symptoms: patientData.symptoms || [],
-    });
-
-    const likelyCondition = this.models.symptomAnalyzer.classify(
-      (patientData.notes || "") + (patientData.symptomCategory || "")
-    );
-
-    return {
-      predictionId: Date.now(),
-      riskLevel:
-        riskScore > 0.7 ? "CRITICAL" : riskScore > 0.4 ? "MODERATE" : "LOW",
-      confidence: (riskScore * 100).toFixed(1) + "%",
-      suggestedDiagnosis: likelyCondition.toUpperCase() || "UNKNOWN VIRAL",
-      timestamp: new Date().toISOString(),
-      moduleVersion: this.modelVersion,
-    };
-  }
+    }
 }
+
+// Update Classify Simulated Model
+AIBrain.prototype.loadModels = async function() {
+    this.models.riskPredictor = { predict: () => 0.5 };
+    this.models.symptomAnalyzer = {
+        classify: (text) => {
+            const keywords = {
+                'Early Blight': ['spot', 'brown', 'potato'],
+                'Aphid Attack': ['curl', 'yellow', 'sticky'],
+                'Root Rot': ['wilt', 'black', 'dry']
+            };
+            for (let [disease, keys] of Object.entries(keywords)) {
+                if (keys.some(k => text.toLowerCase().includes(k))) return disease;
+            }
+            return "General Deficiency"; // Default
+        }
+    };
+};
 
 // Global Export
 window.AIBrain = new AIBrain();

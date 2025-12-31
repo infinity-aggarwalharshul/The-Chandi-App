@@ -18,7 +18,7 @@ const STATIC_ASSETS = [
   "/index.html",
   "/manifest.json",
   "/css/style.css",
-  "/css/nidaan-x.css",
+  "/css/kissan-x.css",
   "/js/encryption.js",
   "/js/voice-handler.js",
   "/js/image-handler.js",

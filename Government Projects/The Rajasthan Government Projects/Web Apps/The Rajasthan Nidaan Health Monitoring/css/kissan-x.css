@@ -1,0 +1,92 @@
+/* Raj Kissan Organic X - Agricultural Premium UI */
+
+:root {
+  --kissan-green: #00b894;
+  --organic-leaf: #55efc4;
+  --harvest-gold: #fdcb6e;
+  --soil-dark: #1e272e;
+  --neon-green: #00ff88;
+}
+
+body {
+  background-color: var(--soil-dark) !important;
+}
+
+/* Patent / Legal Footer */
+.legal-footer {
+  text-align: center;
+  padding: 20px;
+  font-size: 0.7rem;
+  color: #b2bec3;
+  background: #000;
+  margin-top: 40px;
+  border-top: 2px solid var(--kissan-green);
+}
+
+.patent-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--harvest-gold);
+  color: #000;
+  font-weight: bold;
+  border-radius: 4px;
+  font-size: 0.6rem;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+/* AI Diagnostics Panel (Krishi-Drishti) */
+.ai-panel {
+  background: linear-gradient(135deg, #053322 0%, #004d33 100%);
+  color: #fff;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 15px;
+  border: 1px solid var(--neon-green);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+}
+
+.pulse-dot {
+  height: 10px;
+  width: 10px;
+  background-color: var(--neon-green);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 2s infinite;
+}
+
+/* Splash Screen Override */
+#app-splash {
+  background: #052216 !important;
+  color: var(--neon-green) !important;
+}
+
+.splash-loader {
+  border: 3px solid rgba(0, 255, 136, 0.2) !important;
+  border-top: 3px solid var(--neon-green) !important;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+  }
+}
+
+/* System Status Bar */
+.system-status-bar {
+  background: rgba(5, 20, 10, 0.95);
+  border-top: 1px solid var(--kissan-green);
+}
+.status-running {
+  background-color: var(--neon-green);
+  box-shadow: 0 0 5px var(--neon-green);
+}

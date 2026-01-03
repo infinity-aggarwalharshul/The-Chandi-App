@@ -601,7 +601,11 @@
 
     <!-- Nidaan X Core Engines (World's Most Powerful) -->
     <script src="js/ai-brain.js" defer></script>
+    <script src="js/ai-brain.js" defer></script>
     <script src="js/quantum-db.js" defer></script>
+    <script src="js/geo-tag.js" defer></script>
+    <script src="js/e-mandi.js" defer></script>
+    <script src="js/kissan-bot.js" defer></script>
   </head>
   <body>
     <!-- SPLASH SCREEN -->
@@ -712,6 +716,17 @@
       <div class="nav-link" onclick="window.app.nav('field')" id="tab-field">
         Krishi-Sevak (Field)
       </div>
+      <div
+        class="nav-link"
+        onclick="window.app.nav('mandi')"
+        id="tab-mandi-nav"
+      >
+        e-Mandi (Sales)
+      </div>
+      <div class="nav-link" onclick="window.app.nav('geo')" id="tab-geo-nav">
+        Geo-Map (Live)
+      </div>
+
       <div class="nav-link" onclick="window.app.nav('cloud')" id="tab-cloud">
         Dhara-Kosh (Cloud)
       </div>
@@ -1162,7 +1177,56 @@
           </div>
         </div>
       </div>
+      </div>
+
+      <!-- VIEW: E-MANDI MARKETPLACE -->
+      <div id="view-mandi" class="grid-system hidden">
+        <div class="col-12">
+            <h3>🛒 e-Mandi: Organic Marketplace</h3>
+            <p style="color:#ccc;">Buy & Sell Certified Organic Produce directly from Farmers.</p>
+            <div id="mandi-container"></div>
+        </div>
+      </div>
+
+      <!-- VIEW: GEO-INTELLIGENCE -->
+      <div id="view-geo" class="grid-system hidden">
+        <div class="col-12">
+            <h3>🛰️ Geo-Intelligence (Live Tracking)</h3>
+            <div class="card">
+                <div class="card-header">
+                    <span>Current Location (GPS)</span>
+                    <span class="status-badge status-online">High Accuracy</span>
+                </div>
+                <div style="padding: 15px;">
+                    <div><strong>Latitude:</strong> <span id="geo-lat">--</span></div>
+                    <div><strong>Longitude:</strong> <span id="geo-lon">--</span></div>
+                    <button class="lens-btn" style="margin-top:10px; width:auto;" onclick="updateLocation()">📍 Update Location</button>
+                    <button class="lens-btn" style="width:auto; background:#333;" onclick="toggleLiveTrack()">📡 Live Rural Tracking</button>
+                    
+                    <!-- MAP EMBED -->
+                    <div id="map-box">
+                        <iframe id="sat-map" class="map-frame" src="about:blank"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
     </main>
+
+    <!-- CHATBOT -->
+    <div class="chat-float-btn" onclick="window.kissanBot.toggle()">🤖</div>
+    <div class="chat-panel" id="chat-panel">
+        <div class="chat-header">
+            <span>Kissan Sahayak (AI)</span>
+            <span onclick="window.kissanBot.toggle()" style="cursor:pointer;">✖</span>
+        </div>
+        <div class="chat-messages" id="chat-messages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Ask in any language..." style="flex:1; padding:5px; border-radius:4px; border:none;">
+            <button onclick="window.kissanBot.startListening()" style="border:none; background:transparent; cursor:pointer; color:white;">🎤</button>
+            <button onclick="window.kissanBot.sendMessage()" style="border:none; background:transparent; cursor:pointer; color:white;">➤</button>
+        </div>
+    </div>
 
     <!-- FOOTER -->
     <footer
@@ -1307,14 +1371,23 @@
             document
               .querySelectorAll(".nav-link")
               .forEach((el) => el.classList.remove("active"));
-            document.getElementById(`tab-${tab}`).classList.add("active");
+            
+            const tabEl = document.getElementById(`tab-${tab}`);
+            if(tabEl) tabEl.classList.add("active");
+
             document
               .querySelectorAll(".grid-system")
               .forEach((el) => el.classList.add("hidden"));
-            document.getElementById(`view-${tab}`).classList.remove("hidden");
+            
+            const viewEl = document.getElementById(`view-${tab}`);
+            if(viewEl) viewEl.classList.remove("hidden");
 
             // Stop camera if leaving field view
             if (tab !== "field") this.stopCamera();
+
+            // Init Feature specific logic
+            if(tab === 'mandi' && window.eMandi) window.eMandi.renderMarketplace('mandi-container');
+            if(tab === 'geo') updateLocation();
           },
 
           // LANGUAGE TOGGLE
@@ -1693,6 +1766,30 @@
         }, 2000);
     </script>
     <!-- SYSTEM HEALTH MONITOR (Dynamic) -->
+    <script>
+      async function updateLocation() {
+        try {
+          const pos = await window.geoService.getLocation();
+          document.getElementById("geo-lat").innerText = pos.lat.toFixed(6);
+          document.getElementById("geo-lon").innerText = pos.lon.toFixed(6);
+          document.getElementById("sat-map").src = window.geoService.getMapUrl(
+            pos.lat,
+            pos.lon
+          );
+        } catch (e) {
+          alert("GPS Error: " + e);
+        }
+      }
+      function toggleLiveTrack() {
+        window.geoService.startTracking((pos) => {
+          document.getElementById("geo-lat").innerText =
+            pos.lat.toFixed(6) + " (LIVE)";
+          document.getElementById("geo-lon").innerText =
+            pos.lon.toFixed(6) + " (LIVE)";
+        });
+        alert("📡 Rural Live Tracking ON");
+      }
+    </script>
     <div class="system-status-bar">
       <div class="status-item">
         <div class="status-indicator status-running" id="status-ai"></div>

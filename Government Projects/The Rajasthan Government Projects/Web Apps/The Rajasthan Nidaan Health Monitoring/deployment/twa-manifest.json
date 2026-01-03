@@ -1,0 +1,29 @@
+{
+  "packageId": "com.rajkissan.organic.x",
+  "name": "Raj Kissan Organic X",
+  "launcherName": "Raj Kissan",
+  "themeColor": "#2ecc71",
+  "navigationColor": "#1e272e",
+  "backgroundColor": "#1e272e",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://raj-kissan-x.web.app/icon-512.png",
+  "maskableIconUrl": "https://raj-kissan-x.web.app/icon-maskable.png",
+  "appVersionName": "3.1.0",
+  "appVersionCode": 30100,
+  "shortcuts": [
+    {
+      "name": "Field Report",
+      "shortName": "Report",
+      "url": "/?view=field",
+      "icon": "https://raj-kissan-x.web.app/shortcut-field.png"
+    },
+    {
+      "name": "e-Mandi",
+      "shortName": "Buy",
+      "url": "/?view=mandi",
+      "icon": "https://raj-kissan-x.web.app/shortcut-mandi.png"
+    }
+  ],
+  "generatorApp": "bubblewrap"
+}

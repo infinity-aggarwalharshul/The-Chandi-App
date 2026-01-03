@@ -1,20 +1,20 @@
-# Governance Model - Nidaan X
+# Governance Model - Raj Kissan X
 
 ## 1. Overview
 
-The **Nidaan X** project is governed by a **Project Steering Committee (PSC)** consisting of representatives from the Government of Rajasthan and the technical development partner.
+The **Raj Kissan X** project is governed by a **Project Steering Committee (PSC)** consisting of representatives from the Department of Agriculture, Rajasthan.
 
 ## 2. Project Steering Committee (PSC)
 
 The PSC is responsible for:
 
 - Roadmap definition.
-- Major architectural decisions (e.g., changing Cloud Providers).
-- Compliance audits (DPDP Act, ISO 27001).
+- Major architectural decisions (e.g., Cloud Providers).
+- Compliance audits (Organic Policy, DPDP Act).
 
 ### Members
 
-- **Chairperson:** Additional Mission Director, NHM Rajasthan.
+- **Chairperson:** Commissioner, Agriculture Department.
 - **Technical Lead:** CTO, The ChitraHarsha VPK Ventures.
 - **Security Auditor:** CISO, DoIT&C.
 
@@ -25,8 +25,4 @@ Decisions are made by consensus. If consensus cannot be reached, the Chairperson
 ## 4. Release Policy
 
 - **Minor Updates:** Can be approved by the Technical Lead.
-- **Major Versions:** Require sign-off from the full PSC and a User Acceptance Testing (UAT) report from at least 2 Districts.
-
-## 5. Amendment
-
-This governance model can be amended by a 2/3rds majority vote of the PSC.
+- **Major Versions:** Require sign-off from the PSC and UAT from 2 Krishi Vigyan Kendras (KVKs).

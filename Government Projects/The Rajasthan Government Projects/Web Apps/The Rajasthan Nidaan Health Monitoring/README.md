@@ -28,6 +28,21 @@
 - **10 Trillion Scale:** Connector architecture for exabyte-scale Land Record ingestion.
 - **Compressed Vault:** Uses LZ-String algorithms to store farm history locally.
 
+### 🛰️ Geo-Intelligence (Satellite & Rural Tracking)
+
+- **Live Tracking:** "Mission Mode" for real-time tracking of Field Officers in rural zones.
+- **Geo-Tagging:** High-accuracy GPS stamping for every Organic Certificate issued.
+
+### 🛒 e-Mandi Marketplace
+
+- **Farm-to-Global:** Direct sales platform for farmers to list organic produce.
+- **Trust System:** Digital feedback and rating system for every transaction.
+
+### 🤖 Kissan-Sahayak Bot (Multilingual)
+
+- **24/7 Support:** AI assistant fluent in 65+ languages (via Google Speech API).
+- **Voice-First:** Speak to the bot for prices, weather, and grievance redressal.
+
 ### 🗣️ Voice-First Interface
 
 - **Multilingual:** Supports Hindi, Rajasthani, and English for farmer accessibility.

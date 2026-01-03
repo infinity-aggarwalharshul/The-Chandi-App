@@ -24,6 +24,9 @@ const STATIC_ASSETS = [
   "/js/image-handler.js",
   "/js/ai-brain.js",
   "/js/quantum-db.js",
+  "/js/geo-tag.js",
+  "/js/e-mandi.js",
+  "/js/kissan-bot.js",
   // Firebase SDKs (cached from CDN)
   "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js",
   "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js",

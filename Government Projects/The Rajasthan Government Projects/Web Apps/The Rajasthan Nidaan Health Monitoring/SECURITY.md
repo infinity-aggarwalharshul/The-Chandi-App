@@ -1,27 +1,25 @@
-# Security Policy
+# Security Policy - Raj Kissan Organic X
 
-## Supported Versions
+## 1. Governance
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 3.0.x   | :white_check_mark: |
-| 2.0.x   | :x:                |
+The **Raj Kissan X** security framework is built on the **Vastu-Digital** architecture, ensuring data sovereignty and integrity for the Government of Rajasthan.
 
-## Reporting a Vulnerability
+## 2. Advanced Security Features (Zenith Edition)
 
-If you discover a vulnerability in **Raj Kissan Organic X**, please follow these steps:
+- **Vajra-Kavach 2.0**: Active anti-hacking guard with heuristic detection of unauthorized debuggers and GPS spoofing.
+- **Satya-Chain Blockchain**: Immutable transaction logging for every data shard, ensuring zero-tampering of land and crop records.
+- **Client-Side Encryption**: AES-256-GCM encryption where keys never leave the farmer's device.
 
-1.  **Do NOT** disclose the vulnerability publicly.
-2.  Email the details to **security@chitraharshavpk.in**.
+## 3. Reporting a Vulnerability
 
-### Data Protection Standards
+We take the security of Rajasthan's farmers seriously. If you find a bug:
 
-This project adheres to:
+- **Do NOT** open a public issue.
+- **Email**: [security@chitraharsha.vpk](mailto:security@chitraharsha.vpk)
+- We follow a 48-hour critical patch policy.
 
-- **ISO/IEC 27001:2013** (Information Security Management)
-- **AES-256-GCM** Encryption for Land Records.
-- **OWASP Top 10** mitigation strategies.
+## 4. Compliance
 
-## Responsible Disclosure
-
-Testing on `production` (live farmer data) is strictly prohibited.
+- **DPDP Act 2023**: Fully compliant with Indian Data Protection laws.
+- **Meghraj Cloud**: Optimized for Government Community Cloud isolation.
+- **Organic Policy 2025**: Auditable logs for organic certification tracing.

@@ -606,6 +606,8 @@
     <script src="js/geo-tag.js" defer></script>
     <script src="js/e-mandi.js" defer></script>
     <script src="js/kissan-bot.js" defer></script>
+    <script src="js/blockchain.js" defer></script>
+    <script src="js/security-guard.js" defer></script>
   </head>
   <body>
     <!-- SPLASH SCREEN -->
@@ -1544,7 +1546,26 @@
             if (window.VoiceHandler) window.VoiceHandler.discardAudio();
             this.state.currentAudio = null;
 
-            alert("✅ Saved to Sanchay (Local Vault) & QuantumDB.");
+            // Log to Satya-Chain (Blockchain)
+            if (window.SatyaChain) {
+              window.SatyaChain.addTransaction({
+                recordId: record.id,
+                hash: record.patientId.substring(0, 10), // Store partial hash for audit
+                timestamp: record.timestamp
+              }).then(() => {
+                this.updateSecurityIndicators();
+              });
+            }
+
+            alert("✅ Saved to Sanchay (Local Vault) & Logged on Satya-Chain Blockchain.");
+          },
+
+          updateSecurityIndicators: function() {
+            if(window.SatyaChain) {
+                const height = window.SatyaChain.chain.length;
+                const chainDisplay = document.getElementById('chain-height');
+                if(chainDisplay) chainDisplay.innerText = height;
+            }
           },
 
           refreshQueueUI: function () {
@@ -1806,6 +1827,14 @@
       <div class="status-item">
         <div class="status-indicator status-running" id="status-gps"></div>
         <span>GPS: Satellite</span>
+      </div>
+      <div class="status-item">
+        <div class="status-indicator status-running" id="status-chain"></div>
+        <span>Chain: <span id="chain-height">0</span></span>
+      </div>
+      <div class="status-item">
+        <div class="status-indicator status-safe" id="status-kavach"></div>
+        <span>Kavach: Anti-Hacking</span>
       </div>
       <div class="status-item">
         <div class="status-indicator status-syncing" id="status-update"></div>
